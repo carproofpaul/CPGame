@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { AppRegistry, StyleSheet, Dimensions, View, Text, Image, Button } from "react-native";
+import { AppRegistry, StyleSheet, Dimensions, View, Text, Image, Button, Alert } from "react-native";
 import { GameLoop } from "react-native-game-engine";
 import IconButton from 'react-native-vector-icons/MaterialCommunityIcons';
 import Car from './Car';
@@ -29,8 +29,28 @@ export default class ScoreBoard extends PureComponent {
 
   addCarToTrack(car){
     index = this.state.cars.indexOf(car)
-      
-    if(car.isOnTrack == false){
+    if(car.isOnTrack == null){
+        //available for purchase
+        Alert.alert(
+            'Available for purchase',
+            'Do you want to buy this ' + car.title + " for $" + car.price +"?",
+            [
+              {text: 'Buy!', onPress: () => {
+                this.props.addNewCar(car)
+                arr = this.state.cars
+                arr[index].isOnTrack = true
+                this.carInformationTobeUpdated = car
+                this.props.payForCar(car.price * -1) //paying for car
+                this.setState({items : arr})
+              }},
+              {text: 'No', onPress: () => {
+
+              }},
+            ],
+            { cancelable: false }
+          )
+    }  
+    else if(car.isOnTrack == false){
         this.props.addNewCar(car)
         arr = this.state.cars
         arr[index].isOnTrack = true
@@ -64,13 +84,12 @@ export default class ScoreBoard extends PureComponent {
   }
 
   getCarIconColour(x){
-      if(x) return '#efefef'
+      if(x == null) return '#d81c00'
+      else if(x) return '#efefef'
       else return '#000000'
   }
 
   render() {
-      console.log(this.props.carsAvailableToBuy);
-      
     return (
         <View style={styles.container}>
             <Text>${this.state.score.toFixed(2)}</Text>

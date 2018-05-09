@@ -137,7 +137,9 @@ export default class Game extends PureComponent {
           this.stop = false
         }},
         {text: 'No', onPress: () => {
-          this.carsAvailableToBuy.push(this.newCars.shift()) //storing it for later
+          unsoldCar = this.newCars.shift()
+          unsoldCar.isOnTrack = null
+          this.carInformation.push(unsoldCar) //storing it for later
           this.requiredPointForNewCar = this.newCars[0].price
           this.stop = false
         }},
@@ -200,6 +202,7 @@ export default class Game extends PureComponent {
           cars={this.carInformation}
           requiredPoints={this.requiredPointForNewCar}
           carsAvailableToBuy={this.carsAvailableToBuy}
+          payForCar={(score) => this.addToScore(score)}
         />
         {this.state.components.map(data =>
           <View key={this.key++} style={[styles.carContainer, data]}>
