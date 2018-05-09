@@ -18,7 +18,7 @@ export default class Car  {
     this.x = (xOffset + LEFT_BUFFER) || LEFT_BUFFER
     this.callbackScore = callbackScore //callback for notifying game of an event (e.g adding score every second)
     this.callbackLap = callbackLap //callback to notify the game of an new lap
-    this.laps = -1
+    this.laps = 0
 
     this.direction = {
       up:     {value: false, tag: 'UP'},
@@ -61,11 +61,12 @@ export default class Car  {
   checkBoundary () {
     if(this.y <= TOP_BUFFER && this.getDirection() == 'UP'){
       this.setDirection('RIGHT')
+      this.laps++ //adding a lap
+      this.callbackLap(1)
+      this.info.mileage++
     }
     if(this.x >= RIGHT_BUFFER && this.getDirection() == 'RIGHT'){
       this.setDirection('DOWN')
-      this.laps++ //adding laps when going down
-      this.callbackLap(this.laps)
     }
     if(this.y >= BOTTOM_BUFFER && this.getDirection() == 'DOWN'){
       this.setDirection('LEFT')

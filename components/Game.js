@@ -16,7 +16,7 @@ export default class Game extends PureComponent {
     this.carInformation = [
       {
         title: '2015 Toyota Corolla CE',
-        speed : 7,
+        speed : 17,
         score : 5,
         mileage : 105000,
         price : 13560,
@@ -26,7 +26,7 @@ export default class Game extends PureComponent {
       },
       {
         title: '2009 Toyota Matrix XR',
-        speed : 11,
+        speed : 21,
         score : 7,
         mileage : 210000,
         price : 6890,
@@ -36,7 +36,7 @@ export default class Game extends PureComponent {
       },
       {
         title: '2011 Toyota Yaris',
-        speed : 5,
+        speed : 15,
         score : 5,
         mileage : 150000,
         price : 9459,
@@ -46,7 +46,7 @@ export default class Game extends PureComponent {
       },
       {
         title: '2017 Toyota Camry V6',
-        speed : 16,
+        speed : 26,
         score : 13,
         mileage : 15788,
         price : 26955,
@@ -56,11 +56,11 @@ export default class Game extends PureComponent {
       },
     ]
 
-    this.cars = [ ]
+    this.carsOnTrack = [ ]
 
     /*
     //array of cars
-    this.cars = [
+    this.carsOnTrack = [
       new Car(0, 0, 'RIGHT', 7, (score) => this.addToScore(score), 23, (laps) => this.addToLap(laps)),
       new Car(0, 0, 'RIGHT', 8, (score) => this.addToScore(score), 56, (laps) => this.addToLap(laps)),
       new Car(0, 0, 'RIGHT', 9, (score) => this.addToScore(score), 65, (laps) => this.addToLap(laps)),
@@ -84,32 +84,30 @@ export default class Game extends PureComponent {
   }
 
   removeCarFromTrack(id){
-    console.log(this.cars);
-    this.cars[this.indexOfCar.indexOf(id)].delete()
-    this.cars.splice(this.indexOfCar.indexOf(id), 1)
-    console.log(this.cars);
+    this.carsOnTrack[this.indexOfCar.indexOf(id)].delete() //deleting references/callbacks
+    this.carsOnTrack.splice(this.indexOfCar.indexOf(id), 1) //removing from track
+    
   }
 
   updateCars(){
     //moving the car and adding the new coordinates to an array
-    cars = []
+    carsToBeAddedOnTrack = []
     this.indexOfCar = [] //this array will be used to find the index of a car using it's id
-    for (var i = 0; i < this.cars.length; i++) {
-      this.cars[i].move()
-      this.indexOfCar.push(this.cars[i].info.id)
-      cars.push(
+    for (var i = 0; i < this.carsOnTrack.length; i++) {
+      this.carsOnTrack[i].move()
+      this.indexOfCar.push(this.carsOnTrack[i].info.id) //keeping the index of each car
+      carsToBeAddedOnTrack.push(
         {
-          left: this.cars[i].x,
-          top: this.cars[i].y
+          left: this.carsOnTrack[i].x,
+          top: this.carsOnTrack[i].y
         }
       )
     }
-
-    return cars
+    return carsToBeAddedOnTrack
   }
 
   addNewCar(car){
-    this.cars.push( new Car(0, 
+    this.carsOnTrack.push( new Car(0, 
                             0, 
                             'RIGHT', 
                             (score) => this.addToScore(score), 

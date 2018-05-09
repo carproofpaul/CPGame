@@ -15,32 +15,39 @@ export default class ScoreBoard extends PureComponent {
         cars: this.props.cars,
         carInformation: null,
     };
-    
+    this.carInformationTobeUpdated = null
 
   }
 
   componentDidUpdate(){
+      this.showCarInformation(this.carInformationTobeUpdated)
       this.setState({
         score: this.props.score,
         mileage: this.props.mileage
       })
   }
 
-  addCarToTrack(car, index){
+  addCarToTrack(car){
+    index = this.state.cars.indexOf(car)
+      
     if(car.isOnTrack == false){
         this.props.addNewCar(car)
         arr = this.state.cars
         arr[index].isOnTrack = true
         this.component = null //clearing information component
+        this.carInformationTobeUpdated = car
         this.setState({items : arr})
     } else {
         arr[index].isOnTrack = false
+        this.component = null //clearing information component
+        this.carInformationTobeUpdated = null 
         this.props.removeCar(car.id) //removed from track
     }
   }
 
-  showCarInformation(car){
-    console.log("LONG PRESS")
+  showCarInformation(car, index){
+    this.carInformationTobeUpdated = car
+    if(this.carInformationTobeUpdated == null) return
     accidents = ""
     if(car.accidents.length == 0){
         accidents = 'No accidents'
@@ -72,7 +79,17 @@ export default class ScoreBoard extends PureComponent {
                 style={styles.gridView}
                 itemDimension={50}
                 items={this.state.cars}
-                renderItem={(car, index) => (<IconButton onPress={() => this.addCarToTrack(car, index)} onLongPress={() => this.showCarInformation(car)} name='car' size={50} color={this.getCarIconColour(car.isOnTrack)}/>)}
+                renderItem={
+                    (item) => (
+                                        <IconButton 
+                                            onPress={() => this.addCarToTrack(item)} 
+                                            onLongPress={() => this.showCarInformation(item)} 
+                                            name='car' 
+                                            size={50} 
+                                            color={this.getCarIconColour(item.isOnTrack)}
+                                        />
+                                    )
+                }
             />
             {this.component}
         </View>
