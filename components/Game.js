@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { AppRegistry, StyleSheet, Dimensions, View, Text, Image, Button } from "react-native";
+import { AppRegistry, StyleSheet, Dimensions, View, Text, Image, Button, Alert } from "react-native";
 import { GameLoop } from "react-native-game-engine";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Car from './Car';
@@ -13,31 +13,13 @@ export default class Game extends PureComponent {
     this.totalLaps = 0
     this.id = 0;
 
+    this.stop = false
+
     this.carInformation = [
       {
-        title: '2015 Toyota Corolla CE',
-        speed : 17,
-        score : 5,
-        mileage : 105000,
-        price : 13560,
-        accidents : [],
-        isOnTrack : false,
-        id: this.id++,
-      },
-      {
-        title: '2009 Toyota Matrix XR',
-        speed : 21,
-        score : 7,
-        mileage : 210000,
-        price : 6890,
-        accidents : [],
-        isOnTrack : false,
-        id: this.id++,
-      },
-      {
-        title: '2011 Toyota Yaris',
+        title: '2010 Toyota Yaris',
         speed : 15,
-        score : 5,
+        score : 50,
         mileage : 150000,
         price : 9459,
         accidents : [],
@@ -45,29 +27,85 @@ export default class Game extends PureComponent {
         id: this.id++,
       },
       {
+        title: '2010 Honda Civic ',
+        speed : 17,
+        score : 55,
+        mileage : 210000,
+        price : 6890,
+        accidents : [],
+        isOnTrack : false,
+        id: this.id++,
+      },
+      {
+        title: '2007 Honda Vibe ',
+        speed : 11,
+        score : 70,
+        mileage : 250300,
+        price : 4999,
+        accidents : [],
+        isOnTrack : false,
+        id: this.id++,
+      },
+    ]
+    this.newCars = [
+      {
+        title: '2015 Toyota Corolla CE',
+        speed : 17,
+        score : 50,
+        mileage : 105000,
+        price : 500,
+        accidents : [],
+        isOnTrack : false,
+        id: this.id++,
+      },
+      {
+        title: '2010 Toyota Matrix XR',
+        speed : 21,
+        score : 70,
+        mileage : 210000,
+        price : 6890,
+        accidents : [],
+        isOnTrack : false,
+        id: this.id++,
+      },
+      {
         title: '2017 Toyota Camry V6',
         speed : 26,
-        score : 13,
+        score : 130,
         mileage : 15788,
         price : 26955,
         accidents : [],
         isOnTrack : false,
         id: this.id++,
       },
+      {
+        title: '2018 Toyota avalon',
+        speed : 24,
+        score : 230,
+        mileage : 100,
+        price : 45999,
+        accidents : [],
+        isOnTrack : false,
+        id: this.id++,
+      },
+      {
+        title: '2018 Toyota RAV4',
+        speed : 20,
+        score : 250,
+        mileage : 100,
+        price : 29999,
+        accidents : [],
+        isOnTrack : false,
+        id: this.id++,
+      },
     ]
+    this.carsOnTrack = []
+    this.carsAvailableToBuy = []
 
-    this.carsOnTrack = [ ]
+    this.requiredPointForNewCar = this.newCars[0].price
+    
 
-    /*
-    //array of cars
-    this.carsOnTrack = [
-      new Car(0, 0, 'RIGHT', 7, (score) => this.addToScore(score), 23, (laps) => this.addToLap(laps)),
-      new Car(0, 0, 'RIGHT', 8, (score) => this.addToScore(score), 56, (laps) => this.addToLap(laps)),
-      new Car(0, 0, 'RIGHT', 9, (score) => this.addToScore(score), 65, (laps) => this.addToLap(laps)),
-    ]
-    */
-
-    //state{ car }
+    //state{ components }
     this.state = {
       components : []
     };
@@ -76,7 +114,36 @@ export default class Game extends PureComponent {
 
   //callback
   addToScore(score){
+    if(this.stop) return;
     this.score = this.score + score
+    if(this.score > this.requiredPointForNewCar) this.userBoughtNewCar()
+  }
+
+  userBoughtNewCar(){
+    if(this.newCars.length == 0) return; //no new cars
+    this.stop = true
+    Alert.alert(
+      'New Car Available',
+      'Do you want to buy a ' + this.newCars[0].title + " for $" + this.newCars[0].price +"?",
+      [
+        {text: 'Buy!', onPress: () => {
+          this.score = this.score - this.requiredPointForNewCar
+          if(this.newCars.length !== 0) this.carInformation.push(this.newCars.shift());
+          if(this.newCars.length !== 0){
+            this.requiredPointForNewCar = this.newCars[0].price
+          } else {
+            this.requiredPointForNewCar = null
+          }
+          this.stop = false
+        }},
+        {text: 'No', onPress: () => {
+          this.carsAvailableToBuy.push(this.newCars.shift()) //storing it for later
+          this.requiredPointForNewCar = this.newCars[0].price
+          this.stop = false
+        }},
+      ],
+      { cancelable: false }
+    )
   }
 
   addToLap(laps){
@@ -121,8 +188,19 @@ export default class Game extends PureComponent {
 
   render() {
     return (
-      <GameLoop style={styles.container} onUpdate={() => this.setState({components : this.updateCars()})}>
-        <ScoreBoard score={this.score} mileage={this.totalLaps} removeCar={(id) => this.removeCarFromTrack(id)} addNewCar={(car) => this.addNewCar(car)} cars={this.carInformation}/>
+      <GameLoop style={styles.container} onUpdate={() => {
+        if(this.stop) return;
+        this.setState({components : this.updateCars()})
+      }}>
+        <ScoreBoard 
+          score={this.score} 
+          mileage={this.totalLaps} 
+          removeCar={(id) => this.removeCarFromTrack(id)} 
+          addNewCar={(car) => this.addNewCar(car)} 
+          cars={this.carInformation}
+          requiredPoints={this.requiredPointForNewCar}
+          carsAvailableToBuy={this.carsAvailableToBuy}
+        />
         {this.state.components.map(data =>
           <View key={this.key++} style={[styles.carContainer, data]}>
               <Icon name='car' size={50}/>

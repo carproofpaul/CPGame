@@ -34,13 +34,11 @@ export default class ScoreBoard extends PureComponent {
         this.props.addNewCar(car)
         arr = this.state.cars
         arr[index].isOnTrack = true
-        this.component = null //clearing information component
         this.carInformationTobeUpdated = car
         this.setState({items : arr})
     } else {
         arr[index].isOnTrack = false
-        this.component = null //clearing information component
-        this.carInformationTobeUpdated = null 
+        this.carInformationTobeUpdated = car
         this.props.removeCar(car.id) //removed from track
     }
   }
@@ -71,10 +69,13 @@ export default class ScoreBoard extends PureComponent {
   }
 
   render() {
+      console.log(this.props.carsAvailableToBuy);
+      
     return (
         <View style={styles.container}>
             <Text>${this.state.score.toFixed(2)}</Text>
             <Text>{this.state.mileage} km</Text>
+            <Text>${this.props.requiredPoints} to buy next car</Text>
             <GridView
                 style={styles.gridView}
                 itemDimension={50}
