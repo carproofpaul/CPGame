@@ -16,7 +16,6 @@ export default class ScoreBoard extends PureComponent {
         carInformation: null,
     };
     this.carInformationTobeUpdated = null
-
   }
 
   componentDidUpdate(){
@@ -27,7 +26,14 @@ export default class ScoreBoard extends PureComponent {
       })
   }
 
-  addCarToTrack(car){
+  addNewCarToTrack(car){
+    this.props.addNewCar(car)
+    arr = this.state.cars
+    arr[index].isOnTrack = true
+    this.carInformationTobeUpdated = car
+  }
+
+  onPressCar(car){
     index = this.state.cars.indexOf(car)
     if(car.isOnTrack == null){
         //available for purchase
@@ -35,11 +41,8 @@ export default class ScoreBoard extends PureComponent {
             'Available for purchase',
             'Do you want to buy this ' + car.title + " for $" + car.price +"?",
             [
-              {text: 'Buy!', onPress: () => {
-                this.props.addNewCar(car)
-                arr = this.state.cars
-                arr[index].isOnTrack = true
-                this.carInformationTobeUpdated = car
+              {text: 'Yes', onPress: () => {
+                this.addNewCarToTrack(car)
                 this.props.payForCar(car.price * -1) //paying for car
                 this.setState({items : arr})
               }},
@@ -49,13 +52,8 @@ export default class ScoreBoard extends PureComponent {
             ],
             { cancelable: false }
           )
-    }  
-    else if(car.isOnTrack == false){
-        this.props.addNewCar(car)
-        arr = this.state.cars
-        arr[index].isOnTrack = true
-        this.carInformationTobeUpdated = car
-        this.setState({items : arr})
+    } else if(car.isOnTrack == false){
+        this.addNewCarToTrack(car)
     } else {
         arr[index].isOnTrack = false
         this.carInformationTobeUpdated = car
@@ -70,23 +68,23 @@ export default class ScoreBoard extends PureComponent {
     if(car.accidents.length == 0){
         accidents = 'No accidents'
     } else {
-        accidents = "Accident Reported"
+        accidents = car.accidents.join('\n')
     }
 
     this.component = 
-    <View style={{alignItems: 'center'}}>
-        <Text>{car.title}</Text>
-        <Text>{car.mileage} kilometres</Text>
-        <Text>Speed: {car.speed}</Text>
-        <Text>{accidents}</Text>
-        <Text>${car.price}</Text>
-    </View>
+        <View style={{alignItems: 'center'}}>
+            <Text>{car.title}</Text>
+            <Text>{car.mileage} kilometres</Text>
+            <Text>Speed: {car.speed}</Text>
+            <Text>{accidents}</Text>
+            <Text>${car.price}</Text>
+        </View>
   }
 
   getCarIconColour(x){
-      if(x == null) return '#d81c00'
-      else if(x) return '#efefef'
-      else return '#000000'
+      if(x == null) return '#d81c00' //red
+      else if(x) return '#efefef' //grey
+      else return '#000000' //black
   }
 
   render() {
@@ -100,15 +98,15 @@ export default class ScoreBoard extends PureComponent {
                 itemDimension={50}
                 items={this.state.cars}
                 renderItem={
-                    (item) => (
-                                        <IconButton 
-                                            onPress={() => this.addCarToTrack(item)} 
-                                            onLongPress={() => this.showCarInformation(item)} 
-                                            name='car' 
-                                            size={50} 
-                                            color={this.getCarIconColour(item.isOnTrack)}
-                                        />
-                                    )
+                    (item) =>  (
+                                    <IconButton 
+                                        onPress={() => this.onPressCar(item)} 
+                                        onLongPress={() => this.showCarInformation(item)} 
+                                        name='car' 
+                                        size={50} 
+                                        color={this.getCarIconColour(item.isOnTrack)}
+                                    />
+                                )
                 }
             />
             {this.component}

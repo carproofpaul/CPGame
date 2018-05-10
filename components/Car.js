@@ -10,14 +10,18 @@ const TOP_BUFFER = (HEIGHT*0.1) - RADIUS
 const BOTTOM_BUFFER = (HEIGHT*0.9) - RADIUS
 const LEFT_BUFFER = (WIDTH*0.2) - RADIUS
 const RIGHT_BUFFER = (WIDTH*0.8) - RADIUS
+const REPAIRS = ['has a flat tire.', 'has a dented bummer', 'needs a new timing belt.', 'has a cracked windshield.', 'needs new spark plugs.']
+const ACCIDENTS = ['front-end collision', 'rear-end collision', 'head-to-head collision']
 
 export default class Car  {
-  constructor(xOffset, yOffset, direction, callbackScore, callbackLap, info){
+  constructor(xOffset, yOffset, direction, callbackScore, callbackLap, callbackRepair, callbackAccident, info){
     this.info = info //info of the car: speed, score, mileage, price, and accidents(array)
     this.y = (yOffset + TOP_BUFFER) || TOP_BUFFER
     this.x = (xOffset + LEFT_BUFFER) || LEFT_BUFFER
     this.callbackScore = callbackScore //callback for notifying game of an event (e.g adding score every second)
     this.callbackLap = callbackLap //callback to notify the game of an new lap
+    this.callbackRepair = callbackRepair //callback to display required maintenace
+    this.callbackAccident = callbackAccident //callback to display an accident
     this.laps = 0
 
     this.direction = {
@@ -29,13 +33,41 @@ export default class Car  {
 
     this.setDirection(direction || 'RIGHT') //'RIGHT' is default
 
-    this.timer = setInterval(() => this.callbackScore(this.info.score/10 || .1), 100); //callback every second/10 (Keeping a reference to be deleted later)
+    //callback every second/10 (Keeping a reference to be deleted later)
+    this.timer = setInterval(() => this.callbackScore(this.info.score/10 || .1), 100);
+
+    this.maintenance = setInterval(() => {
+      if(this.isMaintenaceRequired()){
+        index = Math.floor((Math.random() * (REPAIRS.length-1)))
+        this.callbackRepair( this.info, REPAIRS[index] )
+      }
+    }, 1000);
+
+    this.accident = setInterval(() => {
+      if(this.isInvolvedInAccident()){
+        isWriteOff = ( 1 == Math.floor((Math.random() * 5)+1)  )  
+        index = Math.floor((Math.random() * (ACCIDENTS.length-1)))
+        this.callbackAccident(info, ACCIDENTS[index], isWriteOff)
+      }
+    }, 1000);
+  }
+
+  isMaintenaceRequired(){
+    //1 out of 100 chance
+    return false
+    return Math.floor((Math.random() * 100) + 1) == Math.floor((Math.random() * 100) + 1)
+  }
+
+  isInvolvedInAccident(){
+    //1 out of 645 chance
+    return Math.floor((Math.random() * 645) + 1) == Math.floor((Math.random() * 645) + 1)    
   }
 
   delete(){
     //destroy all references/callbacks
     this.callbackScore = null
     this.callbackLap = null
+    this.maintenance = null
     clearInterval(this.timer) //clearing timer
   }
 

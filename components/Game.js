@@ -27,7 +27,7 @@ export default class Game extends PureComponent {
         id: this.id++,
       },
       {
-        title: '2010 Honda Civic ',
+        title: '2010 Honda Civic',
         speed : 17,
         score : 55,
         mileage : 210000,
@@ -37,7 +37,7 @@ export default class Game extends PureComponent {
         id: this.id++,
       },
       {
-        title: '2007 Honda Vibe ',
+        title: '2007 Honda Vibe',
         speed : 11,
         score : 70,
         mileage : 250300,
@@ -53,7 +53,7 @@ export default class Game extends PureComponent {
         speed : 17,
         score : 50,
         mileage : 105000,
-        price : 500,
+        price : 9799,
         accidents : [],
         isOnTrack : false,
         id: this.id++,
@@ -100,9 +100,8 @@ export default class Game extends PureComponent {
       },
     ]
     this.carsOnTrack = []
-    this.carsAvailableToBuy = []
 
-    this.requiredPointForNewCar = this.newCars[0].price
+    this.requiredPointForNewCar = this.newCars[0].price //the price of the first car in the newCars array
     
 
     //state{ components }
@@ -114,19 +113,19 @@ export default class Game extends PureComponent {
 
   //callback
   addToScore(score){
-    if(this.stop) return;
     this.score = this.score + score
     if(this.score > this.requiredPointForNewCar) this.userBoughtNewCar()
   }
 
   userBoughtNewCar(){
+    if(this.stop) return;        
     if(this.newCars.length == 0) return; //no new cars
     this.stop = true
     Alert.alert(
       'New Car Available',
       'Do you want to buy a ' + this.newCars[0].title + " for $" + this.newCars[0].price +"?",
       [
-        {text: 'Buy!', onPress: () => {
+        {text: 'Yes!', onPress: () => {
           this.score = this.score - this.requiredPointForNewCar
           if(this.newCars.length !== 0) this.carInformation.push(this.newCars.shift());
           if(this.newCars.length !== 0){
@@ -136,7 +135,7 @@ export default class Game extends PureComponent {
           }
           this.stop = false
         }},
-        {text: 'No', onPress: () => {
+        {text: 'Maybe Later', onPress: () => {
           unsoldCar = this.newCars.shift()
           unsoldCar.isOnTrack = null
           this.carInformation.push(unsoldCar) //storing it for later
@@ -153,9 +152,9 @@ export default class Game extends PureComponent {
   }
 
   removeCarFromTrack(id){
+    if(this.carsOnTrack[this.indexOfCar.indexOf(id)] == null) return;
     this.carsOnTrack[this.indexOfCar.indexOf(id)].delete() //deleting references/callbacks
     this.carsOnTrack.splice(this.indexOfCar.indexOf(id), 1) //removing from track
-    
   }
 
   updateCars(){
@@ -175,12 +174,56 @@ export default class Game extends PureComponent {
     return carsToBeAddedOnTrack
   }
 
+  displayRepair(car, repair){
+    if(this.stop) return; //stop repair from being display when another alert is up
+    cost = Math.floor((Math.random() * 1000) + 100);
+    this.score = this.score - cost    
+    Alert.alert(
+      'Maintenance is Required',
+      "Your "+car.title+" "+repair+"\nThis repair will cost $"+cost+".",
+      [
+        {text: 'Okay', onPress: () => {}}
+      ],
+      { cancelable: true }
+    )
+  }
+
+  displayAccident(car, accident, isWriteOff){
+    message = ""
+    if(isWriteOff){
+      //car is a write off, removing it from the game
+      message = "Your "+car.title+" was in an "+accident+". It was a write off."
+      this.removeCarFromTrack(car.id) //killing all references
+      for(i = 0; i < this.carInformation.length; i++){
+        if(this.carInformation[i].id == car.id){
+          //found the index, removing it from the array
+          this.carInformation.splice(i, 1);
+        }
+      }
+    } else {
+      cost = Math.floor((Math.random() * 5000) + 1000)
+      this.score = this.score - cost
+      message = "Your "+car.title+" was in an "+accident+". Repairs will cost you $"+cost+"."
+    }
+
+    Alert.alert(
+      'Your car was in an accident',
+      message,
+      [
+        {text: 'Okay', onPress: () => {}}
+      ],
+      { cancelable: true }
+    )
+  }
+
   addNewCar(car){
     this.carsOnTrack.push( new Car(0, 
                             0, 
                             'RIGHT', 
                             (score) => this.addToScore(score), 
                             (laps) => this.addToLap(laps), 
+                            (car, repair) => this.displayRepair(car, repair),
+                            (car, accident, isWriteOff) => this.displayAccident(car, accident, isWriteOff),
                             car
                             )
                   )
@@ -190,25 +233,25 @@ export default class Game extends PureComponent {
 
   render() {
     return (
-      <GameLoop style={styles.container} onUpdate={() => {
-        if(this.stop) return;
-        this.setState({components : this.updateCars()})
-      }}>
-        <ScoreBoard 
-          score={this.score} 
-          mileage={this.totalLaps} 
-          removeCar={(id) => this.removeCarFromTrack(id)} 
-          addNewCar={(car) => this.addNewCar(car)} 
-          cars={this.carInformation}
-          requiredPoints={this.requiredPointForNewCar}
-          carsAvailableToBuy={this.carsAvailableToBuy}
-          payForCar={(score) => this.addToScore(score)}
-        />
-        {this.state.components.map(data =>
-          <View key={this.key++} style={[styles.carContainer, data]}>
-              <Icon name='car' size={50}/>
-          </View>
-        )}
+      <GameLoop 
+        style={styles.container} 
+        onUpdate={() => this.setState({components : this.updateCars()})}>
+          <ScoreBoard 
+            score={this.score} 
+            mileage={this.totalLaps} 
+            removeCar={(id) => this.removeCarFromTrack(id)} 
+            addNewCar={(car) => this.addNewCar(car)} 
+            cars={this.carInformation}
+            requiredPoints={this.requiredPointForNewCar}
+            payForCar={(score) => this.addToScore(score)}
+          />
+          {this.state.components.map(data =>
+            <View 
+              key={this.key++} 
+              style={[styles.carContainer, data]}>
+                <Icon name='car' size={50}/>
+            </View>
+          )}
       </GameLoop>
     );
   }
