@@ -68,7 +68,8 @@ export default class ScoreBoard extends PureComponent {
     if(car.accidents.length == 0){
         accidents = 'No accidents'
     } else {
-        accidents = car.accidents.join('\n')
+        accidents = "Accident Report:\n"
+        accidents = accidents + car.accidents.join('\n')
     }
 
     this.component = 
@@ -87,12 +88,21 @@ export default class ScoreBoard extends PureComponent {
       else return '#000000' //black
   }
 
+  getTotalAssets(){
+      total = 0
+      for(i = 0; i < this.state.cars.length; i++){
+        total = total + this.state.cars[i].price;
+      }
+      return total
+  }
+
   render() {
     return (
         <View style={styles.container}>
             <Text>${this.state.score.toFixed(2)}</Text>
             <Text>{this.state.mileage} km</Text>
             <Text>${this.props.requiredPoints} to buy next car</Text>
+            <Text>total assets: ${this.getTotalAssets()}</Text>
             <GridView
                 style={styles.gridView}
                 itemDimension={50}

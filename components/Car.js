@@ -54,7 +54,6 @@ export default class Car  {
 
   isMaintenaceRequired(){
     //1 out of 100 chance
-    return false
     return Math.floor((Math.random() * 100) + 1) == Math.floor((Math.random() * 100) + 1)
   }
 
@@ -67,8 +66,11 @@ export default class Car  {
     //destroy all references/callbacks
     this.callbackScore = null
     this.callbackLap = null
-    this.maintenance = null
-    clearInterval(this.timer) //clearing timer
+    this.callbackRepair = null
+    this.callbackAccident = null
+    clearInterval(this.timer) //clearing timers  
+    clearInterval(this.maintenance) 
+    clearInterval(this.accident)
   }
 
   move(){

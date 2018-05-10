@@ -176,19 +176,23 @@ export default class Game extends PureComponent {
 
   displayRepair(car, repair){
     if(this.stop) return; //stop repair from being display when another alert is up
+    this.stop = true
     cost = Math.floor((Math.random() * 1000) + 100);
     this.score = this.score - cost    
     Alert.alert(
       'Maintenance is Required',
-      "Your "+car.title+" "+repair+"\nThis repair will cost $"+cost+".",
+      "Your "+car.title+" "+repair+" This repair will cost $"+cost+".",
       [
-        {text: 'Okay', onPress: () => {}}
+        {text: 'Okay', onPress: () => {this.stop = false}}
       ],
-      { cancelable: true }
+      { cancelable: false }
     )
   }
 
   displayAccident(car, accident, isWriteOff){
+    if(this.stop) return; //stop repair from being display when another alert is up
+    car.accidents.push(accident)
+    this.stop = true
     message = ""
     if(isWriteOff){
       //car is a write off, removing it from the game
@@ -210,9 +214,9 @@ export default class Game extends PureComponent {
       'Your car was in an accident',
       message,
       [
-        {text: 'Okay', onPress: () => {}}
+        {text: 'Okay', onPress: () => {this.stop = false}}
       ],
-      { cancelable: true }
+      { cancelable: false }
     )
   }
 
