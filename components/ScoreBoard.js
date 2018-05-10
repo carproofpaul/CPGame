@@ -16,6 +16,7 @@ export default class ScoreBoard extends PureComponent {
         carInformation: null,
     };
     this.carInformationTobeUpdated = null
+    
   }
 
   componentDidUpdate(){
@@ -34,6 +35,7 @@ export default class ScoreBoard extends PureComponent {
   }
 
   onPressCar(car){
+    console.log(car.vhr.toString());            
     index = this.state.cars.indexOf(car)
     if(car.isOnTrack == null){
         //available for purchase

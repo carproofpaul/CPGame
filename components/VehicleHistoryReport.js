@@ -26,4 +26,31 @@ export default class VehicleHistoryReprot  {
                                                 }
 
     }
+
+    toString(){
+        output = ""
+        if(this.accidents.length > 0) output = output + "Accidents / Damage: Damage records found\n"
+        else output = output + "Accidents / Damage: No damage records found\n"
+
+        if(this.lienRecords.length > 0) output = output + "Lien Records: Lien records found\n"
+        else output = output + "Lien Records: No lien records found\n"
+
+        if(this.canadianRegistration.length > 0) output = output + "Canadian Registration: "+this.canadianRegistration[0]+" ("+this.canadianRegistration[1]+")\n"
+        else output = output + "Canadian Registration: No Candian registration found\n"
+
+        if(this.isStolen) output = output + "Stolen Status: Currently declared stolen\n"
+        else output = output + "Stolen Status: Not actively declared stolen\n"
+
+        if(this.usHistory.length > 0) output = output + "U.S. History: U.S. history found\n"
+        else output = output + "U.S. History: No U.S. history found\n"
+
+        if(this.recalls.length > 0) output = output + "Recalls: Recalls found\n"
+        else output = output + "Recalls: No information available\n"
+
+        if(this.serviceHistory.length > 0) output = output + "Service History: "+this.serviceHistory.length+" record(s) found\n"
+        else output = output + "Service History: No history found\n"
+
+        return output
+    }
+
 }

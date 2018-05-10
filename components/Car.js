@@ -10,8 +10,18 @@ const TOP_BUFFER = (HEIGHT*0.1) - RADIUS
 const BOTTOM_BUFFER = (HEIGHT*0.9) - RADIUS
 const LEFT_BUFFER = (WIDTH*0.2) - RADIUS
 const RIGHT_BUFFER = (WIDTH*0.8) - RADIUS
-const REPAIRS = ['has a flat tire.', 'has a dented bummer', 'needs a new timing belt.', 'has a cracked windshield.', 'needs new spark plugs.']
-const ACCIDENTS = ['front-end collision', 'rear-end collision', 'head-to-head collision']
+const REPAIRS = [ 'has a flat tire.', 
+                  'has a dented bummer', 
+                  'needs a oil change', 
+                  'has a cracked windshield.', 
+                  'needs new spark plugs.', 
+                  'needs new head lights.',
+                  'needs new brake pads',
+                  'needs a new cabin air filter.']
+
+const ACCIDENTS = [ 'front-end collision', 
+                    'rear-end collision', 
+                    'head-to-head collision']
 
 export default class Car  {
   constructor(xOffset, 
