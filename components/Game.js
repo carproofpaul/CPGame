@@ -4,6 +4,7 @@ import { GameLoop } from "react-native-game-engine";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Car from './Car';
 import ScoreBoard from './ScoreBoard';
+import VechicleHistoryReport from './VehicleHistoryReport';
 
 export default class Game extends PureComponent {
   constructor() {
@@ -22,9 +23,10 @@ export default class Game extends PureComponent {
         score : 50,
         mileage : 150000,
         price : 9459,
-        accidents : [],
         isOnTrack : false,
         id: this.id++,
+        vhr: new VechicleHistoryReport(),
+        
       },
       {
         title: '2010 Honda Civic',
@@ -32,9 +34,9 @@ export default class Game extends PureComponent {
         score : 55,
         mileage : 210000,
         price : 6890,
-        accidents : [],
         isOnTrack : false,
         id: this.id++,
+        vhr: new VechicleHistoryReport()
       },
       {
         title: '2007 Honda Vibe',
@@ -42,9 +44,9 @@ export default class Game extends PureComponent {
         score : 70,
         mileage : 250300,
         price : 4999,
-        accidents : [],
         isOnTrack : false,
         id: this.id++,
+        vhr: new VechicleHistoryReport()
       },
     ]
     this.newCars = [
@@ -54,9 +56,9 @@ export default class Game extends PureComponent {
         score : 50,
         mileage : 105000,
         price : 9799,
-        accidents : [],
         isOnTrack : false,
         id: this.id++,
+        vhr: new VechicleHistoryReport()
       },
       {
         title: '2010 Toyota Matrix XR',
@@ -64,9 +66,9 @@ export default class Game extends PureComponent {
         score : 70,
         mileage : 210000,
         price : 6890,
-        accidents : [],
         isOnTrack : false,
         id: this.id++,
+        vhr: new VechicleHistoryReport()
       },
       {
         title: '2017 Toyota Camry V6',
@@ -74,9 +76,9 @@ export default class Game extends PureComponent {
         score : 130,
         mileage : 15788,
         price : 26955,
-        accidents : [],
         isOnTrack : false,
         id: this.id++,
+        vhr: new VechicleHistoryReport()
       },
       {
         title: '2018 Toyota avalon',
@@ -84,9 +86,9 @@ export default class Game extends PureComponent {
         score : 230,
         mileage : 100,
         price : 45999,
-        accidents : [],
         isOnTrack : false,
         id: this.id++,
+        vhr: new VechicleHistoryReport()
       },
       {
         title: '2018 Toyota RAV4',
@@ -94,9 +96,9 @@ export default class Game extends PureComponent {
         score : 250,
         mileage : 100,
         price : 29999,
-        accidents : [],
         isOnTrack : false,
         id: this.id++,
+        vhr: new VechicleHistoryReport()
       },
     ]
     this.carsOnTrack = []
@@ -191,7 +193,7 @@ export default class Game extends PureComponent {
 
   displayAccident(car, accident, isWriteOff){
     if(this.stop) return; //stop repair from being display when another alert is up
-    car.accidents.push(accident)
+    car.vhr.accidents.push(accident)
     this.stop = true
     message = ""
     if(isWriteOff){
@@ -232,8 +234,6 @@ export default class Game extends PureComponent {
                             )
                   )
   }
-
-
 
   render() {
     return (

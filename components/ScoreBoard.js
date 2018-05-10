@@ -65,11 +65,11 @@ export default class ScoreBoard extends PureComponent {
     this.carInformationTobeUpdated = car
     if(this.carInformationTobeUpdated == null) return
     accidents = ""
-    if(car.accidents.length == 0){
+    if(car.vhr.accidents.length == 0){
         accidents = 'No accidents'
     } else {
         accidents = "Accident Report:\n"
-        accidents = accidents + car.accidents.join('\n')
+        accidents = accidents + car.vhr.accidents.join('\n')
     }
 
     this.component = 

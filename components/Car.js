@@ -14,7 +14,15 @@ const REPAIRS = ['has a flat tire.', 'has a dented bummer', 'needs a new timing 
 const ACCIDENTS = ['front-end collision', 'rear-end collision', 'head-to-head collision']
 
 export default class Car  {
-  constructor(xOffset, yOffset, direction, callbackScore, callbackLap, callbackRepair, callbackAccident, info){
+  constructor(xOffset, 
+              yOffset, 
+              direction, 
+              callbackScore, 
+              callbackLap,  
+              callbackRepair, 
+              callbackAccident, 
+              info){
+
     this.info = info //info of the car: speed, score, mileage, price, and accidents(array)
     this.y = (yOffset + TOP_BUFFER) || TOP_BUFFER
     this.x = (xOffset + LEFT_BUFFER) || LEFT_BUFFER
@@ -23,6 +31,7 @@ export default class Car  {
     this.callbackRepair = callbackRepair //callback to display required maintenace
     this.callbackAccident = callbackAccident //callback to display an accident
     this.laps = 0
+
 
     this.direction = {
       up:     {value: false, tag: 'UP'},
