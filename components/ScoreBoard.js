@@ -101,6 +101,8 @@ export default class ScoreBoard extends PureComponent {
 
   showVehicleHistoryReport(car){
     this.vhr = car.vhr
+    console.log(this.vhr.getServiceHistory());
+    
     Alert.alert(
         'Vehicule History Report',
         car.vhr.reportSummary(),

@@ -73,8 +73,8 @@ export default class Car  {
   }
 
   isMaintenaceRequired(){
-    //1 out of 100 chance
-    return Math.floor((Math.random() * 100) + 1) == Math.floor((Math.random() * 100) + 1)
+    //1 out of 200 chance
+    return Math.floor((Math.random() * 200) + 1) == Math.floor((Math.random() * 200) + 1)
   }
 
   isInvolvedInAccident(){
@@ -121,12 +121,18 @@ export default class Car  {
     }
     if(this.x >= RIGHT_BUFFER && this.getDirection() == 'RIGHT'){
       this.setDirection('DOWN')
+      this.callbackLap(1)
+      this.info.mileage++
     }
     if(this.y >= BOTTOM_BUFFER && this.getDirection() == 'DOWN'){
       this.setDirection('LEFT')
+      this.callbackLap(1)
+      this.info.mileage++
     }
     if(this.x <= LEFT_BUFFER && this.getDirection() == 'LEFT'){
       this.setDirection('UP')
+      this.callbackLap(1)
+      this.info.mileage++
     }
   }
 

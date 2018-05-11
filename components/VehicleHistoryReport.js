@@ -31,6 +31,22 @@ export default class VehicleHistoryReport  {
         this.vehicleDetails = vehicleDetails 
     }
 
+    getAccidentReport(){
+        output = ""
+        for(i = 0; i < this.accidents.length; i++){
+            output = output + this.accidents[i][2] + ": " + this.accidents[i][0] + ",  $" + this.accidents[i][1] + "\n\n" //date: event  $cost
+        }
+        return output
+    }
+
+    getServiceHistory(){
+        output = "Service History\n"
+        for(i = 0; i < this.serviceHistory.length; i++){
+            output = output + this.serviceHistory[i][2] + ": " + this.serviceHistory[i][0] + ",  $" + this.serviceHistory[i][1] + "\n\n" //date: event  $cost
+        }
+        return output
+    }
+
     reportSummary(){
         output = ""
         if(this.accidents.length > 0) output = output + "Accidents / Damage: Damage records found\n\n"

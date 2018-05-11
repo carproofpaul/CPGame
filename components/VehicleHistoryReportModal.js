@@ -16,6 +16,17 @@ export default class VehicleHistoryReportModal extends PureComponent {
     
   }
 
+  showAccidentReport(title, message){
+    Alert.alert(
+        title,
+        message,
+        [ {text: 'Ok', onPress: () => null} ],
+        { cancelable: false }
+    )
+  }
+
+
+
   render() {
     return (
         <Modal
@@ -30,8 +41,9 @@ export default class VehicleHistoryReportModal extends PureComponent {
                 size={35} 
             />
             <View style={styles.buttonLayoutContainer}>
+                <Text style={{fontWeight: 'bold', fontSize: 25, marginBottom: 10}}>Vehicle History Report</Text>
                 <OptionButton
-                    onPress={() => null}
+                    onPress={() => this.showAccidentReport('Accident and Damage Report', this.props.vhr.getAccidentReport())}
                     iconName={'wrench'}
                     text={'Accident/Damage Reports'}
                 />
@@ -61,7 +73,7 @@ export default class VehicleHistoryReportModal extends PureComponent {
                     text={'Recalls'}
                 />
                 <OptionButton
-                    onPress={() => null}
+                    onPress={() => this.showAccidentReport('Service History', this.props.vhr.getServiceHistory())}
                     iconName={'search-web'}
                     text={'Service History'}
                 />

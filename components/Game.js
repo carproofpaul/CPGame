@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Car from './Car';
 import ScoreBoard from './ScoreBoard';
 import VechicleHistoryReport from './VehicleHistoryReport';
+import moment from 'moment';
 
 export default class Game extends PureComponent {
   constructor() {
@@ -235,10 +236,9 @@ export default class Game extends PureComponent {
     if(this.stop) return; //stop repair from being display when another alert is up
     this.stop = true
     
-    car.vhr.serviceHistory.push(repair[1])
-    console.log(car);
-    
     cost = Math.floor((Math.random() * 1000) + 100);
+    car.vhr.serviceHistory.push([repair[1], cost, moment().format('YYYY-MM-DD')])
+    
     this.score = this.score - cost    
     Alert.alert(
       'Maintenance is Required',
@@ -252,7 +252,6 @@ export default class Game extends PureComponent {
 
   displayAccident(car, accident, isWriteOff){
     if(this.stop) return; //stop repair from being display when another alert is up
-    car.vhr.accidents.push(accident)
     this.stop = true
     message = ""
     if(isWriteOff){
@@ -267,6 +266,7 @@ export default class Game extends PureComponent {
       }
     } else {
       cost = Math.floor((Math.random() * 5000) + 1000)
+      car.vhr.accidents.push([accident, cost, moment().format('YYYY-MM-DD')])
       this.score = this.score - cost
       message = "Your "+car.title+" was in an "+accident+". Repairs will cost you $"+cost+"."
     }
