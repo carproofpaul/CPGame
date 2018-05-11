@@ -80,7 +80,6 @@ export default class ScoreBoard extends PureComponent {
             <Text>{car.title}</Text>
             <Text>{car.mileage} kilometres</Text>
             <Text>Speed: {car.speed}</Text>
-            <Text>{accidents}</Text>
             <Text>${car.price}</Text>
         </View>
   }

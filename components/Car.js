@@ -10,14 +10,19 @@ const TOP_BUFFER = (HEIGHT*0.1) - RADIUS
 const BOTTOM_BUFFER = (HEIGHT*0.9) - RADIUS
 const LEFT_BUFFER = (WIDTH*0.2) - RADIUS
 const RIGHT_BUFFER = (WIDTH*0.8) - RADIUS
-const REPAIRS = [ ['has a', 'flat tire'],
+const REPAIRS = [ 
+                  ['has a', 'flat tire'],
                   ['has a', 'dented bummer'],
                   ['needs a','oil change'],
                   ['has a','cracked windshield'],
                   ['needs new', 'spark plugs'],
                   ['needs new', 'head lights'],
                   ['needs new', 'brake pads'],
-                  ['needs a new', 'cabin air filter']
+                  ['needs a new', 'cabin air filter'],
+                  ['needs a', 'engine tune'],
+                  ['needs a', 'general check up'],
+                  ['needs a', 'battery/charging system check'],
+                  ['needs a', 'steering/suspension check'],
                 ]
 
 const ACCIDENTS = [ 'front-end collision', 

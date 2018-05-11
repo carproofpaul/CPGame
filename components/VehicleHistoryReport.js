@@ -40,7 +40,7 @@ export default class VehicleHistoryReport  {
     }
 
     getServiceHistory(){
-        output = "Service History\n"
+        output = ""
         for(i = 0; i < this.serviceHistory.length; i++){
             output = output + this.serviceHistory[i][2] + ": " + this.serviceHistory[i][0] + ",  $" + this.serviceHistory[i][1] + "\n\n" //date: event  $cost
         }
