@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { AppRegistry, StyleSheet, Dimensions, View, Text, Image, Button, Alert } from "react-native";
+import { AppRegistry, StyleSheet, Dimensions, View, Text, Image, Button, Alert, AsyncStorage } from "react-native";
 import { GameLoop } from "react-native-game-engine";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Car from './Car';
@@ -11,6 +11,7 @@ export default class Game extends PureComponent {
   constructor() {
     super();
 
+    //TODO: save in AsyncStorage
     this.game = {
       key: 0, //for unique component arrays
       score: 0,
@@ -158,6 +159,7 @@ export default class Game extends PureComponent {
         },
       ],
       carsOnTrack: [],
+      indexOfCar: [],
       requiredPointForNewCar: 0, //the price of the first car in the newCars array
       init: function() {
         id = 0
@@ -175,6 +177,26 @@ export default class Game extends PureComponent {
       components : []
     };
 
+    //try to laod prev game
+    //this.loadGame()
+
+  }
+
+  async loadGame(){
+    try {
+      const value = await AsyncStorage.getItem('@CPGame:game');
+      this.game = value
+    } catch (error) {
+      console.log("Error retrieving data" + error);
+    }
+  }
+
+  async saveGame(game){
+    try {
+      await AsyncStorage.setItem('@CPGame:game', game);
+    } catch (error) {
+      console.log("Error saving data" + error);
+    }
   }
 
   //callback
@@ -305,6 +327,7 @@ export default class Game extends PureComponent {
   }
 
   render() {
+    //this.saveGame(this.game)
     return (
       <GameLoop 
         style={styles.container} 
