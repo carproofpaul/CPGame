@@ -25,8 +25,14 @@ export default class Game extends PureComponent {
         price : 9459,
         isOnTrack : false,
         id: this.id++,
-        vhr: new VechicleHistoryReport(),
-        
+        vhr: new VechicleHistoryReport({
+          vin: '2T1KU40E19C034127',
+          bodyStyle: 'touring',
+          countryOfAssembly: 'Japan',
+          cylinders: 4,
+          fuelType: 'gas',
+          yearMakeModel: '2010 Toyota Yaris'
+        }),
       },
       {
         title: '2010 Honda Civic',
@@ -36,18 +42,32 @@ export default class Game extends PureComponent {
         price : 6890,
         isOnTrack : false,
         id: this.id++,
-        vhr: new VechicleHistoryReport()
+        vhr: new VechicleHistoryReport({
+          vin: '2T1KU40E19C034127',
+          bodyStyle: 'sport',
+          countryOfAssembly: 'Japan',
+          cylinders: 4,
+          fuelType: 'gas',
+          yearMakeModel: '2010 Honda Civic'
+        })
       },
       {
-        title: '2007 Honda Vibe',
+        title: '2007 Pontiac Vibe',
         speed : 11,
         score : 70,
         mileage : 250300,
         price : 4999,
         isOnTrack : false,
         id: this.id++,
-        vhr: new VechicleHistoryReport()
-      },
+        vhr: new VechicleHistoryReport({
+          vin: '2T1KU40E19C034127',
+          bodyStyle: 'normal',
+          countryOfAssembly: 'USA',
+          cylinders: 4,
+          fuelType: 'gas',
+          yearMakeModel: '2007 Pontiac Vibe'
+        })
+      }
     ]
     this.newCars = [
       {
@@ -58,7 +78,14 @@ export default class Game extends PureComponent {
         price : 9799,
         isOnTrack : false,
         id: this.id++,
-        vhr: new VechicleHistoryReport()
+        vhr: new VechicleHistoryReport({
+          vin: '2T1KU40E19C034127',
+          bodyStyle: 'touring',
+          countryOfAssembly: 'Japan',
+          cylinders: 4,
+          fuelType: 'gas',
+          yearMakeModel: '2015 Toyota Corolla CE'
+        }),
       },
       {
         title: '2010 Toyota Matrix XR',
@@ -68,7 +95,14 @@ export default class Game extends PureComponent {
         price : 6890,
         isOnTrack : false,
         id: this.id++,
-        vhr: new VechicleHistoryReport()
+        vhr: new VechicleHistoryReport({
+          vin: '2T1KU40E19C034127',
+          bodyStyle: 'sport',
+          countryOfAssembly: 'Japan',
+          cylinders: 4,
+          fuelType: 'gas',
+          yearMakeModel: '2010 Toyota Matrix XR'
+        }),
       },
       {
         title: '2017 Toyota Camry V6',
@@ -78,27 +112,48 @@ export default class Game extends PureComponent {
         price : 26955,
         isOnTrack : false,
         id: this.id++,
-        vhr: new VechicleHistoryReport()
+        vhr: new VechicleHistoryReport({
+          vin: '2T1KU40E19C034127',
+          bodyStyle: 'sport',
+          countryOfAssembly: 'Japan',
+          cylinders: 6,
+          fuelType: 'gas',
+          yearMakeModel: '2017 Toyota Camry V6'
+        }),
       },
       {
-        title: '2018 Toyota avalon',
+        title: '2018 Toyota Avalon',
         speed : 24,
         score : 230,
         mileage : 100,
         price : 45999,
         isOnTrack : false,
         id: this.id++,
-        vhr: new VechicleHistoryReport()
+        vhr: new VechicleHistoryReport({
+          vin: '2T1KU40E19C034127',
+          bodyStyle: 'luxury',
+          countryOfAssembly: 'Japan',
+          cylinders: 4,
+          fuelType: 'gas',
+          yearMakeModel: '2018 Toyota Avalon'
+        }),
       },
       {
-        title: '2018 Toyota RAV4',
+        title: '2018 Toyota RAV4 Limited',
         speed : 20,
         score : 250,
         mileage : 100,
         price : 29999,
         isOnTrack : false,
         id: this.id++,
-        vhr: new VechicleHistoryReport()
+        vhr: new VechicleHistoryReport({
+          vin: '2T1KU40E19C034127',
+          bodyStyle: 'Limited',
+          countryOfAssembly: 'Japan',
+          cylinders: 6,
+          fuelType: 'gas',
+          yearMakeModel: '2018 Toyota RAV4 Limited'
+        }),
       },
     ]
     this.carsOnTrack = []
@@ -179,11 +234,15 @@ export default class Game extends PureComponent {
   displayRepair(car, repair){
     if(this.stop) return; //stop repair from being display when another alert is up
     this.stop = true
+    
+    car.vhr.serviceHistory.push(repair[1])
+    console.log(car);
+    
     cost = Math.floor((Math.random() * 1000) + 100);
     this.score = this.score - cost    
     Alert.alert(
       'Maintenance is Required',
-      "Your "+car.title+" "+repair+" This repair will cost $"+cost+".",
+      "Your "+car.title+" "+repair.join(' ')+". This repair will cost $"+cost+".",
       [
         {text: 'Okay', onPress: () => {this.stop = false}}
       ],

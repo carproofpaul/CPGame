@@ -1,5 +1,6 @@
 
-export default class VehicleHistoryReprot  {
+export default class VehicleHistoryReport  {
+    /*
     constructor(vehicleDetails,
                 accidents,
                 lienRecords,
@@ -9,25 +10,28 @@ export default class VehicleHistoryReprot  {
                 recalls,
                 serviceHistory){
 
-        this.accidents = accidents || []
-        this.lienRecords = lienRecords || []
-        this.canadianRegistration = canadianRegistration || ['Ontario', 'Normal']
-        this.isStolen = isStolen || false
-        this.usHistory = usHistory || []
-        this.recalls = recalls || []
-        this.serviceHistory = serviceHistory || []
-        this.vehicleDetails = vehicleDetails || {
-                                                    vin: null,
-                                                    bodyStyle: null,
-                                                    countryOfAssembly: null,
-                                                    cylinders: null,
-                                                    fuelType: null,
-                                                    yearMakeModel: null
-                                                }
-
+        this.accidents = accidents
+        this.lienRecords = lienRecords
+        this.canadianRegistration = canadianRegistration
+        this.isStolen = isStolen
+        this.usHistory = usHistory
+        this.recalls = recalls 
+        this.serviceHistory = serviceHistory
+        this.vehicleDetails = vehicleDetails 
+    }
+    */
+    constructor(vehicleDetails){
+        this.accidents = []
+        this.lienRecords = []
+        this.canadianRegistration = ['Ontario', 'Normal']
+        this.isStolen = false
+        this.usHistory = []
+        this.recalls = []
+        this.serviceHistory = []
+        this.vehicleDetails = vehicleDetails 
     }
 
-    toString(){
+    reportSummary(){
         output = ""
         if(this.accidents.length > 0) output = output + "Accidents / Damage: Damage records found\n\n"
         else output = output + "Accidents / Damage: No damage records found\n\n"

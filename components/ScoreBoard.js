@@ -4,6 +4,7 @@ import { GameLoop } from "react-native-game-engine";
 import IconButton from 'react-native-vector-icons/MaterialCommunityIcons';
 import Car from './Car';
 import GridView from 'react-native-super-grid';
+import VehicleHistoryReportModal from './VehicleHistoryReportModal';
 
 
 export default class ScoreBoard extends PureComponent {
@@ -14,6 +15,7 @@ export default class ScoreBoard extends PureComponent {
         mileage: 0,
         cars: this.props.cars,
         carInformation: null,
+        modalVisible: false,
     };
     this.carInformationTobeUpdated = null
     
@@ -35,7 +37,6 @@ export default class ScoreBoard extends PureComponent {
   }
 
   onPressCar(car){
-    console.log(car.vhr.toString());            
     index = this.state.cars.indexOf(car)
     if(car.isOnTrack == null){
         //available for purchase
@@ -99,13 +100,12 @@ export default class ScoreBoard extends PureComponent {
   }
 
   showVehicleHistoryReport(car){
+    this.vhr = car.vhr
     Alert.alert(
         'Vehicule History Report',
-        car.vhr.toString(),
+        car.vhr.reportSummary(),
         [
-          {text: 'View Complete VHR', onPress: () => {
-
-          }},
+          {text: 'View Complete VHR', onPress: () => this.setState({modalVisible: true})},
         ],
         { cancelable: true }
     )
@@ -114,6 +114,7 @@ export default class ScoreBoard extends PureComponent {
   render() {
     return (
         <View style={styles.container}>
+            <VehicleHistoryReportModal vhr={this.vhr} modalVisible={this.state.modalVisible} onClose={() => this.setState({modalVisible: false})}/>
             <Text>${this.state.score.toFixed(2)}</Text>
             <Text>{this.state.mileage} km</Text>
             <Text>${this.props.requiredPoints} to buy next car</Text>
