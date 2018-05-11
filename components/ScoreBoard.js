@@ -98,6 +98,19 @@ export default class ScoreBoard extends PureComponent {
       return total
   }
 
+  showVehicleHistoryReport(car){
+    Alert.alert(
+        'Vehicule History Report',
+        car.vhr.toString(),
+        [
+          {text: 'View Complete VHR', onPress: () => {
+
+          }},
+        ],
+        { cancelable: true }
+    )
+  }
+
   render() {
     return (
         <View style={styles.container}>
@@ -113,7 +126,7 @@ export default class ScoreBoard extends PureComponent {
                     (item) =>  (
                                     <IconButton 
                                         onPress={() => this.onPressCar(item)} 
-                                        onLongPress={() => this.showCarInformation(item)} 
+                                        onLongPress={() => this.showVehicleHistoryReport(item)} 
                                         name='car' 
                                         size={50} 
                                         color={this.getCarIconColour(item.isOnTrack)}
