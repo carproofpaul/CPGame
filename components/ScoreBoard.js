@@ -4,7 +4,7 @@ import { GameLoop } from "react-native-game-engine";
 import IconButton from 'react-native-vector-icons/MaterialCommunityIcons';
 import Car from './Car';
 import GridView from 'react-native-super-grid';
-import VehicleHistoryReportModal from './VehicleHistoryReportModal';
+import VehicleHistoryReportModal from './VehicleHistoryReport/VehicleHistoryReportModal';
 import {Overlay} from 'react-native-elements';
 
 

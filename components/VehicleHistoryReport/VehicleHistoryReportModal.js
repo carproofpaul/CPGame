@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 import { AppRegistry, StyleSheet, Dimensions, View, Text, Image, Button, Alert, Modal } from "react-native";
 import { GameLoop } from "react-native-game-engine";
 import IconButton from 'react-native-vector-icons/MaterialCommunityIcons';
-import Car from './Car';
+import Car from '../Car';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ListItem, Divider} from 'react-native-elements';
 

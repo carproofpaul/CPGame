@@ -4,7 +4,7 @@ import { GameLoop } from "react-native-game-engine";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Car from './Car';
 import ScoreBoard from './ScoreBoard';
-import VechicleHistoryReport from './VehicleHistoryReport';
+import VechicleHistoryReport from './VehicleHistoryReport/VehicleHistoryReport';
 import Toast, {DURATION} from 'react-native-easy-toast';
 
 export default class Game extends PureComponent {
