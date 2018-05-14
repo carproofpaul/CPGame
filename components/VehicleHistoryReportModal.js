@@ -3,8 +3,38 @@ import { AppRegistry, StyleSheet, Dimensions, View, Text, Image, Button, Alert, 
 import { GameLoop } from "react-native-game-engine";
 import IconButton from 'react-native-vector-icons/MaterialCommunityIcons';
 import Car from './Car';
-import GridView from 'react-native-super-grid';
-import OptionButton from './OptionButton';
+import {ListItem} from 'react-native-elements';
+
+const list = [
+    {
+        title: 'Accident/Damage Reports',
+        icon: 'library-books',
+    },
+    {
+        title: 'Lien Records',
+        icon: 'trending-down',
+    },
+    {
+        title: 'Canadian Registration',
+        icon: 'people',
+    },
+    {
+        title: 'Stolen Status',
+        icon: 'cancel',
+    },
+    {
+        title: 'U.S. History',
+        icon: 'flag',
+    },
+    {
+        title: 'Recalls',
+        icon: 'new-releases',
+    },
+    {
+        title: 'Service History',
+        icon: 'search',
+    },       
+];
 
 
 export default class VehicleHistoryReportModal extends PureComponent {
@@ -15,18 +45,7 @@ export default class VehicleHistoryReportModal extends PureComponent {
     };
     
   }
-
-  showAccidentReport(title, message){
-    Alert.alert(
-        title,
-        message,
-        [ {text: 'Ok', onPress: () => null} ],
-        { cancelable: false }
-    )
-  }
-
-
-
+/*
   render() {
     return (
         <Modal
@@ -41,9 +60,8 @@ export default class VehicleHistoryReportModal extends PureComponent {
                 size={35} 
             />
             <View style={styles.buttonLayoutContainer}>
-                <Text style={{fontWeight: 'bold', fontSize: 25, marginBottom: 10}}>Vehicle History Report</Text>
                 <OptionButton
-                    onPress={() => this.showAccidentReport('Accident and Damage Report', this.props.vhr.getAccidentReport())}
+                    onPress={() => null}
                     iconName={'wrench'}
                     text={'Accident/Damage Reports'}
                 />
@@ -73,7 +91,7 @@ export default class VehicleHistoryReportModal extends PureComponent {
                     text={'Recalls'}
                 />
                 <OptionButton
-                    onPress={() => this.showAccidentReport('Service History', this.props.vhr.getServiceHistory())}
+                    onPress={() => null}
                     iconName={'search-web'}
                     text={'Service History'}
                 />
@@ -81,6 +99,31 @@ export default class VehicleHistoryReportModal extends PureComponent {
         </Modal>
     );
   }
+*/
+
+  render() {
+      return(
+        <Modal
+        animationType="slide"
+        transparent={false}
+        visible={this.props.modalVisible}
+        onRequestClose={() => this.props.onClose()}>
+        <View>
+            {
+                list.map((item, i) => (
+                <ListItem
+                    key={i}
+                    title={item.title}
+                    leftIcon={{ name: item.icon }}
+                    onPress={() => console.log(i)}
+                />
+                ))
+            }
+        </View>
+      </Modal>        
+      )
+  }
+
 }
 
 const styles = StyleSheet.create({

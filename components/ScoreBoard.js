@@ -45,6 +45,10 @@ export default class ScoreBoard extends PureComponent {
             'Do you want to buy this ' + car.title + " for $" + car.price +"?",
             [
               {text: 'Yes', onPress: () => {
+                if(car.price > this.state.score){
+                    this.props.toast.show("Sorry, you don't have enough money.", 3000)
+                    return
+                }
                 this.addNewCarToTrack(car)
                 this.props.payForCar(car.price * -1) //paying for car
                 this.setState({items : arr})
@@ -80,7 +84,7 @@ export default class ScoreBoard extends PureComponent {
             <Text>{car.title}</Text>
             <Text>{car.mileage} kilometres</Text>
             <Text>Speed: {car.speed}</Text>
-            <Text>${car.price}</Text>
+            <Text>${car.price.toFixed(2)}</Text>
         </View>
   }
 
@@ -100,8 +104,6 @@ export default class ScoreBoard extends PureComponent {
 
   showVehicleHistoryReport(car){
     this.vhr = car.vhr
-    console.log(this.vhr.getServiceHistory());
-    
     Alert.alert(
         'Vehicule History Report',
         car.vhr.reportSummary(),
@@ -119,7 +121,7 @@ export default class ScoreBoard extends PureComponent {
             <Text>${this.state.score.toFixed(2)}</Text>
             <Text>{this.state.mileage} km</Text>
             <Text>${this.props.requiredPoints} to buy next car</Text>
-            <Text>total assets: ${this.getTotalAssets()}</Text>
+            <Text>total assets: ${this.getTotalAssets().toFixed(2)}</Text>
             <GridView
                 style={styles.gridView}
                 itemDimension={50}
