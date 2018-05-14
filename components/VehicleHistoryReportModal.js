@@ -3,7 +3,8 @@ import { AppRegistry, StyleSheet, Dimensions, View, Text, Image, Button, Alert, 
 import { GameLoop } from "react-native-game-engine";
 import IconButton from 'react-native-vector-icons/MaterialCommunityIcons';
 import Car from './Car';
-import {ListItem} from 'react-native-elements';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {ListItem, Divider} from 'react-native-elements';
 
 const list = [
     {
@@ -108,6 +109,14 @@ export default class VehicleHistoryReportModal extends PureComponent {
         transparent={false}
         visible={this.props.modalVisible}
         onRequestClose={() => this.props.onClose()}>
+        <Icon
+            style={{margin: 15}}
+            size={30}
+            onPress={() => this.props.onClose()}
+            name='chevron-down' 
+        />
+        <Text style={{fontSize: 20, marginLeft: 15, fontWeight: 'bold'}}>Vehicle History Report</Text>
+        <Divider style={{ backgroundColor: 'black', margin: 15 }} />
         <View>
             {
                 list.map((item, i) => (

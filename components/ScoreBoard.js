@@ -5,6 +5,7 @@ import IconButton from 'react-native-vector-icons/MaterialCommunityIcons';
 import Car from './Car';
 import GridView from 'react-native-super-grid';
 import VehicleHistoryReportModal from './VehicleHistoryReportModal';
+import {Overlay} from 'react-native-elements';
 
 
 export default class ScoreBoard extends PureComponent {
@@ -16,6 +17,7 @@ export default class ScoreBoard extends PureComponent {
         cars: this.props.cars,
         carInformation: null,
         modalVisible: false,
+        overlay: false,
     };
     this.carInformationTobeUpdated = null
     
@@ -103,6 +105,7 @@ export default class ScoreBoard extends PureComponent {
   }
 
   showVehicleHistoryReport(car){
+    //NOT_USED
     this.vhr = car.vhr
     Alert.alert(
         'Vehicule History Report',
@@ -130,7 +133,10 @@ export default class ScoreBoard extends PureComponent {
                     (item) =>  (
                                     <IconButton 
                                         onPress={() => this.onPressCar(item)} 
-                                        onLongPress={() => this.showVehicleHistoryReport(item)} 
+                                        onLongPress={() => {
+                                            this.vhr = item.vhr
+                                            this.setState({modalVisible: true})
+                                        }} 
                                         name='car' 
                                         size={50} 
                                         color={this.getCarIconColour(item.isOnTrack)}
