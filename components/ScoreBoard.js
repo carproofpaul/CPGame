@@ -25,7 +25,8 @@ export default class ScoreBoard extends PureComponent {
             cylinders: null,
             fuelType: null,
             yearMakeModel: null
-          })
+          }),
+        data: null,
     };
     this.carInformationTobeUpdated = null
     
@@ -126,14 +127,15 @@ export default class ScoreBoard extends PureComponent {
   }
 
   render() {
+    
     return (
         <View style={styles.container}>
-            <VehicleHistoryReportModal vhr={this.state.vhr} modalVisible={this.state.modalVisible} onClose={() => this.setState({modalVisible: false})}/>
+            <VehicleHistoryReportModal vhr={this.state.vhr} data={this.state.data} modalVisible={this.state.modalVisible} onClose={() => this.setState({modalVisible: false})}/>
             <Text>${this.state.score.toFixed(2)}</Text>
             <Text>{this.state.mileage} km</Text>
             <Text>${this.props.requiredPoints} to buy next car</Text>
             <Text>total assets: ${this.getTotalAssets().toFixed(2)}</Text>
-            <GridView
+        <GridView
                 style={styles.gridView}
                 itemDimension={50}
                 items={this.state.cars}
@@ -144,6 +146,7 @@ export default class ScoreBoard extends PureComponent {
                                         onLongPress={() => {
                                             this.setState({
                                                 vhr: item.vhr,
+                                                data: item,
                                                 modalVisible: true
                                             })
                                         }} 

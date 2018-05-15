@@ -27,7 +27,7 @@ export default class Game extends PureComponent {
         id: this.id++,
         vhr: new VechicleHistoryReport({
           vin: '2T1KU40E19C034127',
-          bodyStyle: 'touring',
+          bodyStyle: 'Touring',
           countryOfAssembly: 'Japan',
           cylinders: 4,
           fuelType: 'gas',
@@ -44,7 +44,7 @@ export default class Game extends PureComponent {
         id: this.id++,
         vhr: new VechicleHistoryReport({
           vin: '2T1KU40E19C034127',
-          bodyStyle: 'sport',
+          bodyStyle: 'Sport',
           countryOfAssembly: 'Japan',
           cylinders: 4,
           fuelType: 'gas',
@@ -61,7 +61,7 @@ export default class Game extends PureComponent {
         id: this.id++,
         vhr: new VechicleHistoryReport({
           vin: '2T1KU40E19C034127',
-          bodyStyle: 'normal',
+          bodyStyle: 'Touring',
           countryOfAssembly: 'USA',
           cylinders: 4,
           fuelType: 'gas',
@@ -80,7 +80,7 @@ export default class Game extends PureComponent {
         id: this.id++,
         vhr: new VechicleHistoryReport({
           vin: '2T1KU40E19C034127',
-          bodyStyle: 'sport',
+          bodyStyle: 'Sport',
           countryOfAssembly: 'Japan',
           cylinders: 4,
           fuelType: 'gas',
@@ -97,7 +97,7 @@ export default class Game extends PureComponent {
         id: this.id++,
         vhr: new VechicleHistoryReport({
           vin: '2T1KU40E19C034127',
-          bodyStyle: 'touring',
+          bodyStyle: 'Touring',
           countryOfAssembly: 'Japan',
           cylinders: 4,
           fuelType: 'gas',
@@ -114,7 +114,7 @@ export default class Game extends PureComponent {
         id: this.id++,
         vhr: new VechicleHistoryReport({
           vin: '2T1KU40E19C034127',
-          bodyStyle: 'sport',
+          bodyStyle: 'Sport',
           countryOfAssembly: 'Japan',
           cylinders: 6,
           fuelType: 'gas',
@@ -131,7 +131,7 @@ export default class Game extends PureComponent {
         id: this.id++,
         vhr: new VechicleHistoryReport({
           vin: '2T1KU40E19C034127',
-          bodyStyle: 'luxury',
+          bodyStyle: 'Luxury',
           countryOfAssembly: 'Japan',
           cylinders: 4,
           fuelType: 'gas',
