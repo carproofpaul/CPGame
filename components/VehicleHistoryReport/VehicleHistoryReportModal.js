@@ -5,6 +5,11 @@ import Car from '../Car';
 import {ListItem, Divider} from 'react-native-elements';
 import AccidentsDamage from './details/AccidentsDamage';
 import ServiceHistory from './details/ServiceHistory';
+import LienRecords from './details/LienRecords';
+import CanadianRegistration from './details/CanadianRegistration';
+import StolenStatus from './details/StolenStatus';
+import UsHistory from './details/UsHistory';
+import Recalls from './details/Recalls';
 
 
 const list = [
@@ -51,11 +56,11 @@ export default class VehicleHistoryReportModal extends PureComponent {
   componentDidUpdate(){
     this.details = [
         <AccidentsDamage data={this.props.vhr.accidents} onClose={() => this.setState({content: null})}/>,
-        null,
-        null,
-        null,
-        null,
-        null,
+        <LienRecords data={this.props.vhr.lienRecords} onClose={() => this.setState({content: null})}/>,
+        <CanadianRegistration data={this.props.vhr.canadianRegistration} onClose={() => this.setState({content: null})}/>,
+        <StolenStatus data={this.props.vhr.isStolen} onClose={() => this.setState({content: null})}/>,
+        <UsHistory data={this.props.vhr.usHistory} onClose={() => this.setState({content: null})}/>,
+        <Recalls data={this.props.vhr.recalls} onClose={() => this.setState({content: null})}/>,
         <ServiceHistory data={this.props.vhr.serviceHistory} onClose={() => this.setState({content: null})}/>,         
     ];
   }
