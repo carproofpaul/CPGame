@@ -10,6 +10,7 @@ import CanadianRegistration from './details/CanadianRegistration';
 import StolenStatus from './details/StolenStatus';
 import UsHistory from './details/UsHistory';
 import Recalls from './details/Recalls';
+import TrueValue from './details/TrueValue';
 
 
 const list = [
@@ -54,6 +55,7 @@ export default class VehicleHistoryReportModal extends PureComponent {
   }
 
   componentDidUpdate(){
+    this.trueValue = <TrueValue data={this.props.vhr} onClose={() => this.setState({content: null})}/>
     this.details = [
         <AccidentsDamage data={this.props.vhr.accidents} onClose={() => this.setState({content: null})}/>,
         <LienRecords data={this.props.vhr.lienRecords} onClose={() => this.setState({content: null})}/>,
@@ -65,65 +67,8 @@ export default class VehicleHistoryReportModal extends PureComponent {
     ];
   }
 
-/*
-  render() {
-    return (
-        <Modal
-          animationType="slide"
-          transparent={false}
-          visible={this.props.modalVisible}
-          onRequestClose={() => this.props.onClose()}>
-            <IconButton 
-                style={{margin: 10}}
-                onPress={() => this.props.onClose()} 
-                name='chevron-down' 
-                size={35} 
-            />
-            <View style={styles.buttonLayoutContainer}>
-                <OptionButton
-                    onPress={() => null}
-                    iconName={'wrench'}
-                    text={'Accident/Damage Reports'}
-                />
-                <OptionButton
-                    onPress={() => null}
-                    iconName={'trending-down'}
-                    text={'Lien Records'}
-                />
-                <OptionButton
-                    onPress={() => null}
-                    iconName={'account'}
-                    text={'Canadian Registration'}
-                />
-                <OptionButton
-                    onPress={() => null}
-                    iconName={'cancel'}
-                    text={'Stolen Status'}
-                />
-                <OptionButton
-                    onPress={() => null}
-                    iconName={'flag'}
-                    text={'U.S. History'}
-                />
-                <OptionButton
-                    onPress={() => null}
-                    iconName={'bullhorn'}
-                    text={'Recalls'}
-                />
-                <OptionButton
-                    onPress={() => null}
-                    iconName={'search-web'}
-                    text={'Service History'}
-                />
-            </View>
-        </Modal>
-    );
-  }
-*/
-
     render() {
         //if(this.props.modalVisible) console.log(this.props.vhr);
-        
         const data = 
             this.state.content || 
             <View style={{flex: 1}}>
@@ -134,6 +79,13 @@ export default class VehicleHistoryReportModal extends PureComponent {
                     name='chevron-down' 
                 />
                 <Text style={{fontSize: 20, marginLeft: 15, fontWeight: 'bold'}}>Vehicle History Report</Text>
+                <Divider style={{ backgroundColor: 'black', margin: 15 }} />
+                <ListItem
+                    title={'CARPROOF TRUE VALUE'+'\u2122'}
+                    leftIcon={{ name: 'account-circle' }}
+                    chevron={true}
+                    onPress={() => this.setState({content: this.trueValue})}
+                />
                 <Divider style={{ backgroundColor: 'black', margin: 15 }} />
                 <View>
                     {
