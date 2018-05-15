@@ -41,6 +41,7 @@ export default class ScoreBoard extends PureComponent {
   }
 
   addNewCarToTrack(car){
+    index = this.state.cars.indexOf(car)
     this.props.addNewCar(car)
     arr = this.state.cars
     arr[index].isOnTrack = true
@@ -93,9 +94,8 @@ export default class ScoreBoard extends PureComponent {
     this.component = 
         <View style={{alignItems: 'center'}}>
             <Text>{car.title}</Text>
-            <Text>{car.mileage} kilometres</Text>
-            <Text>Speed: {car.speed}</Text>
-            <Text>${car.price.toFixed(2)}</Text>
+            <Text>{car.mileage} km</Text>
+            <Text>Value: ${this.addCommas(car.price.toFixed(2))}</Text>
         </View>
   }
 
@@ -108,7 +108,9 @@ export default class ScoreBoard extends PureComponent {
   getTotalAssets(){
       total = 0
       for(i = 0; i < this.state.cars.length; i++){
-        total = total + this.state.cars[i].price;
+        if(this.state.cars[i].isOnTrack != null){
+            total = total + this.state.cars[i].price;
+        }
       }
       return total
   }
@@ -127,14 +129,15 @@ export default class ScoreBoard extends PureComponent {
   }
 
   render() {
-    
+    if(this.props.requiredPoints != -1) nextCar = '$' + this.addCommas(this.props.requiredPoints) + " to buy next car"
+    else nextCar = ""
     return (
         <View style={styles.container}>
             <VehicleHistoryReportModal vhr={this.state.vhr} data={this.state.data} modalVisible={this.state.modalVisible} onClose={() => this.setState({modalVisible: false})}/>
-            <Text>${this.state.score.toFixed(2)}</Text>
+            <Text>${this.addCommas(this.state.score.toFixed(2))}</Text>
             <Text>{this.state.mileage} km</Text>
-            <Text>${this.props.requiredPoints} to buy next car</Text>
-            <Text>total assets: ${this.getTotalAssets().toFixed(2)}</Text>
+            <Text>{nextCar}</Text>
+            <Text>total assets: ${this.addCommas(this.getTotalAssets().toFixed(2))}</Text>
         <GridView
                 style={styles.gridView}
                 itemDimension={50}
@@ -161,6 +164,18 @@ export default class ScoreBoard extends PureComponent {
         </View>
     );
   }
+
+  addCommas(nStr){
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
+}
 }
 
 const styles = StyleSheet.create({

@@ -171,7 +171,7 @@ export default class Game extends PureComponent {
   //callback
   addToScore(score){
     this.score = this.score + score
-    if(this.score > this.requiredPointForNewCar) this.userBoughtNewCar()
+    if(this.requiredPointForNewCar != -1 && this.score > this.requiredPointForNewCar) this.userBoughtNewCar()
   }
 
   userBoughtNewCar(){
@@ -180,7 +180,8 @@ export default class Game extends PureComponent {
     unsoldCar = this.newCars.shift()
     unsoldCar.isOnTrack = null
     this.carInformation.push(unsoldCar) //storing it for later
-    this.requiredPointForNewCar = this.newCars[0].price
+    if(this.newCars.length != 0) this.requiredPointForNewCar = this.newCars[0].price
+    else this.requiredPointForNewCar = -1
     /*
     Alert.alert(
       'New Car Available',
