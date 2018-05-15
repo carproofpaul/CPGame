@@ -6,193 +6,209 @@ import Car from './Car';
 import GridView from 'react-native-super-grid';
 import VehicleHistoryReportModal from './VehicleHistoryReport/VehicleHistoryReportModal';
 import VechicleHistoryReport from './VehicleHistoryReport/VehicleHistoryReport';
-import {Overlay} from 'react-native-elements';
+import {Card} from 'react-native-elements';
 
 
 export default class ScoreBoard extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-        score: 0,
-        mileage: 0,
-        cars: this.props.cars,
-        carInformation: null,
-        modalVisible: false,
-        vhr: new VechicleHistoryReport({
-            vin: null,
-            bodyStyle: null,
-            countryOfAssembly: null,
-            cylinders: null,
-            fuelType: null,
-            yearMakeModel: null
-          }),
-        data: null,
-    };
-    this.carInformationTobeUpdated = null
-    
-  }
+    constructor(props) {
+        super(props);
+        this.state = {
+            score: 0,
+            mileage: 0,
+            cars: this.props.cars,
+            carInformation: null,
+            modalVisible: false,
+            vhr: new VechicleHistoryReport({
+                vin: null,
+                bodyStyle: null,
+                countryOfAssembly: null,
+                cylinders: null,
+                fuelType: null,
+                yearMakeModel: null
+            }),
+            data: null,
+        };
+        this.carInformationTobeUpdated = null
+        
+    }
 
-  componentDidUpdate(){
-      this.showCarInformation(this.carInformationTobeUpdated)
-      this.setState({
-        score: this.props.score,
-        mileage: this.props.mileage
-      })
-  }
+    componentDidUpdate(){
+        this.showCarInformation(this.carInformationTobeUpdated)
+        this.setState({
+            score: this.props.score,
+            mileage: this.props.mileage
+        })
+    }
 
-  addNewCarToTrack(car){
-    index = this.state.cars.indexOf(car)
-    this.props.addNewCar(car)
-    arr = this.state.cars
-    arr[index].isOnTrack = true
-    this.carInformationTobeUpdated = car
-  }
-
-  onPressCar(car){
-    index = this.state.cars.indexOf(car)
-    if(car.isOnTrack == null){
-        //available for purchase
-        Alert.alert(
-            'Available for purchase',
-            'Do you want to buy this ' + car.title + " for $" + car.price +"?",
-            [
-              {text: 'Yes', onPress: () => {
-                if(car.price > this.state.score){
-                    this.props.toast.show("Sorry, you don't have enough money.", 3000)
-                    return
-                }
-                this.addNewCarToTrack(car)
-                this.props.payForCar(car.price * -1) //paying for car
-                this.setState({items : arr})
-              }},
-              {text: 'No', onPress: () => {
-
-              }},
-            ],
-            { cancelable: false }
-          )
-    } else if(car.isOnTrack == false){
-        this.addNewCarToTrack(car)
-    } else {
-        arr[index].isOnTrack = false
+    addNewCarToTrack(car){
+        index = this.state.cars.indexOf(car)
+        this.props.addNewCar(car)
+        arr = this.state.cars
+        arr[index].isOnTrack = true
         this.carInformationTobeUpdated = car
-        this.props.removeCar(car.id) //removed from track
-    }
-  }
-
-  showCarInformation(car, index){
-    this.carInformationTobeUpdated = car
-    if(this.carInformationTobeUpdated == null) return
-    accidents = ""
-    if(car.vhr.accidents.length == 0){
-        accidents = 'No accidents'
-    } else {
-        accidents = "Accident Report:\n"
-        accidents = accidents + car.vhr.accidents.join('\n')
     }
 
-    this.component = 
-        <View style={{alignItems: 'center'}}>
-            <Text>{car.title}</Text>
-            <Text>{car.mileage} km</Text>
-            <Text>Value: ${this.addCommas(car.price.toFixed(2))}</Text>
-        </View>
-  }
+    onPressCar(car){
+        index = this.state.cars.indexOf(car)
+        if(car.isOnTrack == null){
+            //available for purchase
+            Alert.alert(
+                'Available for purchase',
+                'Do you want to buy this ' + car.title + " for $" + car.price +"?",
+                [
+                {text: 'Yes', onPress: () => {
+                    if(car.price > this.state.score){
+                        this.props.toast.show("Sorry, you don't have enough money.", 3000)
+                        return
+                    }
+                    this.addNewCarToTrack(car)
+                    this.props.payForCar(car.price * -1) //paying for car
+                    this.setState({items : arr})
+                }},
+                {text: 'No', onPress: () => {
 
-  getCarIconColour(x){
-      if(x == null) return '#d81c00' //red
-      else if(x) return '#efefef' //grey
-      else return '#000000' //black
-  }
-
-  getTotalAssets(){
-      total = 0
-      for(i = 0; i < this.state.cars.length; i++){
-        if(this.state.cars[i].isOnTrack != null){
-            total = total + this.state.cars[i].price;
+                }},
+                ],
+                { cancelable: false }
+            )
+        } else if(car.isOnTrack == false){
+            this.addNewCarToTrack(car)
+        } else {
+            arr[index].isOnTrack = false
+            this.carInformationTobeUpdated = car
+            this.props.removeCar(car.id) //removed from track
         }
-      }
-      return total
-  }
-
-  showVehicleHistoryReport(car){
-    //NOT_USED
-    this.vhr = car.vhr
-    Alert.alert(
-        'Vehicule History Report',
-        car.vhr.reportSummary(),
-        [
-          {text: 'View Complete VHR', onPress: () => this.setState({modalVisible: true})},
-        ],
-        { cancelable: true }
-    )
-  }
-
-  render() {
-    if(this.props.requiredPoints != -1) nextCar = '$' + this.addCommas(this.props.requiredPoints) + " to buy next car"
-    else nextCar = ""
-    return (
-        <View style={styles.container}>
-            <VehicleHistoryReportModal vhr={this.state.vhr} data={this.state.data} modalVisible={this.state.modalVisible} onClose={() => this.setState({modalVisible: false})}/>
-            <Text>${this.addCommas(this.state.score.toFixed(2))}</Text>
-            <Text>{this.state.mileage} km</Text>
-            <Text>{nextCar}</Text>
-            <Text>total assets: ${this.addCommas(this.getTotalAssets().toFixed(2))}</Text>
-        <GridView
-                style={styles.gridView}
-                itemDimension={50}
-                items={this.state.cars}
-                renderItem={
-                    (item) =>  (
-                                    <IconButton 
-                                        onPress={() => this.onPressCar(item)} 
-                                        onLongPress={() => {
-                                            this.setState({
-                                                vhr: item.vhr,
-                                                data: item,
-                                                modalVisible: true
-                                            })
-                                        }} 
-                                        name='car' 
-                                        size={50} 
-                                        color={this.getCarIconColour(item.isOnTrack)}
-                                    />
-                                )
-                }
-            />
-            {this.component}
-        </View>
-    );
-  }
-
-  addCommas(nStr){
-    nStr += '';
-    x = nStr.split('.');
-    x1 = x[0];
-    x2 = x.length > 1 ? '.' + x[1] : '';
-    var rgx = /(\d+)(\d{3})/;
-    while (rgx.test(x1)) {
-        x1 = x1.replace(rgx, '$1' + ',' + '$2');
     }
-    return x1 + x2;
-}
+
+    showCarInformation(car, index){
+        this.carInformationTobeUpdated = car
+        if(this.carInformationTobeUpdated == null) return
+        accidents = ""
+        if(car.vhr.accidents.length == 0){
+            accidents = 'No accidents'
+        } else {
+            accidents = "Accident Report:\n"
+            accidents = accidents + car.vhr.accidents.join('\n')
+        }
+
+        this.component = 
+            <Card wrapperStyle={styles.card}>
+                <Text style={styles.title}>{car.title}</Text>
+                <Text style={styles.subTitle}>{car.mileage} km</Text>
+                <Text style={styles.subTitle}>Value: ${this.addCommas(car.price.toFixed(2))}</Text>
+            </Card>
+    }
+
+    getCarIconColour(x){
+        if(x == null) return '#d81c00' //red
+        else if(x) return '#efefef' //grey
+        else return '#000000' //black
+    }
+
+    getTotalAssets(){
+        total = 0
+        for(i = 0; i < this.state.cars.length; i++){
+            if(this.state.cars[i].isOnTrack != null){
+                total = total + this.state.cars[i].price;
+            }
+        }
+        return total
+    }
+
+    showVehicleHistoryReport(car){
+        //NOT_USED
+        this.vhr = car.vhr
+        Alert.alert(
+            'Vehicule History Report',
+            car.vhr.reportSummary(),
+            [
+            {text: 'View Complete VHR', onPress: () => this.setState({modalVisible: true})},
+            ],
+            { cancelable: true }
+        )
+    }
+
+    render() {
+        if(this.props.requiredPoints != -1) nextCar = '$' + this.addCommas(this.props.requiredPoints) + " to buy next car"
+        else nextCar = ""
+        return (
+            <View style={styles.container}>
+                <Image style={{margin: 10, height: 25, width: 103.75}} source={{uri: 'https://www.carproof.com/public/images/CARPROOFlogo-primary_flat.png'}}/>            
+                <VehicleHistoryReportModal vhr={this.state.vhr} data={this.state.data} modalVisible={this.state.modalVisible} onClose={() => this.setState({modalVisible: false})}/>
+                <Card wrapperStyle={styles.card}>
+                    <Text style={styles.title}>${this.addCommas(this.state.score.toFixed(2))}</Text>
+                    <Text style={styles.subTitle}>{this.state.mileage} km</Text>
+                    <Text style={styles.subTitle}>{nextCar}</Text>
+                    {/* <Text>total assets: ${this.addCommas(this.getTotalAssets().toFixed(2))}</Text> */}
+                </Card>
+                <GridView
+                        style={styles.gridView}
+                        itemDimension={50}
+                        items={this.state.cars}
+                        renderItem={
+                            (item) =>  (
+                                            <IconButton 
+                                                onPress={() => this.onPressCar(item)} 
+                                                onLongPress={() => {
+                                                    this.setState({
+                                                        vhr: item.vhr,
+                                                        data: item,
+                                                        modalVisible: true
+                                                    })
+                                                }} 
+                                                name='car' 
+                                                size={50} 
+                                                color={this.getCarIconColour(item.isOnTrack)}
+                                            />
+                                        )
+                        }
+                />
+                {this.component}
+            </View>
+        );
+    }
+
+    addCommas(nStr){
+        nStr += '';
+        x = nStr.split('.');
+        x1 = x[0];
+        x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        return x1 + x2;
+    }
 }
 
 const styles = StyleSheet.create({
-  gridView: {
-    paddingTop: 50,
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-    backgroundColor:'transparent',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 100,
-  },
-  carContainer: {
-    flex : 1,
-    position: "absolute",
-    backgroundColor:'transparent'
-  },
+    gridView: {
+        paddingTop: 50,
+        flex: 1,
+    },
+    container: {
+        flex: 1,
+        backgroundColor:'#fcfcfc',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 100,
+    },
+    carContainer: {
+        flex : 1,
+        position: "absolute",
+        backgroundColor:'transparent'
+    },
+    card : {
+        justifyContent: 'center', 
+        alignItems: 'center',
+    },
+    title: {
+        fontWeight: 'bold',
+        fontSize: 20,
+        textAlign: 'center',
+    },
+    subTitle: {
+        fontSize: 15,
+        textAlign: 'center',
+    },
 });

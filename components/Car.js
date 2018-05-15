@@ -117,22 +117,29 @@ export default class Car  {
     }
   }
 
+  onLap(){
+    this.laps++ //adding a lap
+    this.callbackLap(1)
+    this.info.mileage++
+    this.info.price = this.info.price - 0.20 //20 cents per km
+  }
+
   checkBoundary () {
     if(this.y <= TOP_BUFFER && this.getDirection() == 'UP'){
       this.setDirection('RIGHT')
-      this.laps++ //adding a lap
-      this.callbackLap(1)
-      this.info.mileage++
-      this.info.price = this.info.price - 0.20 //20 cents per km
+      this.onLap()
     }
     if(this.x >= RIGHT_BUFFER && this.getDirection() == 'RIGHT'){
       this.setDirection('DOWN')
+      this.onLap()
     }
     if(this.y >= BOTTOM_BUFFER && this.getDirection() == 'DOWN'){
       this.setDirection('LEFT')
+      this.onLap()
     }
     if(this.x <= LEFT_BUFFER && this.getDirection() == 'LEFT'){
       this.setDirection('UP')
+      this.onLap()
     }
   }
 
