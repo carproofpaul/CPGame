@@ -5,37 +5,6 @@ import IconButton from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ListItem, Divider} from 'react-native-elements';
 
-const list = [
-    {
-        title: 'Accident/Damage Reports',
-        icon: 'library-books',
-    },
-    {
-        title: 'Lien Records',
-        icon: 'trending-down',
-    },
-    {
-        title: 'Canadian Registration',
-        icon: 'people',
-    },
-    {
-        title: 'Stolen Status',
-        icon: 'cancel',
-    },
-    {
-        title: 'U.S. History',
-        icon: 'flag',
-    },
-    {
-        title: 'Recalls',
-        icon: 'new-releases',
-    },
-    {
-        title: 'Service History',
-        icon: 'search',
-    },       
-];
-
 
 export default class ServiceHistory extends PureComponent {
   constructor(props) {
@@ -46,24 +15,41 @@ export default class ServiceHistory extends PureComponent {
   }
 
   render() {
-      return(
-        <View style={styles.container}>
-            <IconButton
-                style={{margin: 15}}
-                size={30}
-                onPress={() => this.props.onClose()}
-                name='chevron-down' 
-            />
-            <Text>ServiceHistory</Text>
-        </View>
-      )
+    if(this.props.data.length == 0) component = <Text style={{fontStyle: 'italic', textAlign: 'center'}}>No History Available</Text>
+    else component = null
+
+    return(
+    <View style={styles.container}>
+        <IconButton
+            size={30}
+            onPress={() => this.props.onClose()}
+            name='chevron-down' 
+        />
+        {
+            component ||
+            <View>
+                {
+                    this.props.data.map((item, i) => (
+                    <ListItem
+                        key={i}
+                        title={item.repair}
+                        subtitle={item.date}
+                        rightTitle={'$'+item.cost}
+                    />
+                    ))
+                }
+            </View>
+        }
+    </View>
+    )
   }
 
 }
 
 const styles = StyleSheet.create({
   container : {
-    flex : 1
+    flex : 1,
+    margin: 15
   },
 
 });

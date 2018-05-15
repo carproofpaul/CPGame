@@ -70,21 +70,21 @@ export default class Car  {
 
     this.accident = setInterval(() => {
       if(this.isInvolvedInAccident()){
-        isWriteOff = ( 1 == Math.floor((Math.random() * 5)+1)  )  
+        //isWriteOff = ( 1 == Math.floor((Math.random() * 5)+1)  )  false for now
         index = Math.floor((Math.random() * (ACCIDENTS.length-1)))
-        this.callbackAccident(info, ACCIDENTS[index], isWriteOff)
+        this.callbackAccident(info, ACCIDENTS[index], false)
       }
     }, 1000);
   }
 
   isMaintenaceRequired(){
     //1 out of 100 chance
-    return Math.floor((Math.random() * 100) + 1) == Math.floor((Math.random() * 100) + 1)
+    return Math.floor((Math.random() * 100) + 1) == Math.floor((Math.random() * 100 ) + 1)
   }
 
   isInvolvedInAccident(){
     //1 out of 645 chance
-    return Math.floor((Math.random() * 645) + 1) == Math.floor((Math.random() * 645) + 1)    
+    return Math.floor((Math.random() * 20) + 1) == Math.floor((Math.random() * 20) + 1)    
   }
 
   delete(){

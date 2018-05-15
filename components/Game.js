@@ -6,6 +6,7 @@ import Car from './Car';
 import ScoreBoard from './ScoreBoard';
 import VechicleHistoryReport from './VehicleHistoryReport/VehicleHistoryReport';
 import Toast, {DURATION} from 'react-native-easy-toast';
+import moment from 'moment';
 
 export default class Game extends PureComponent {
   constructor() {
@@ -236,16 +237,23 @@ export default class Game extends PureComponent {
   }
 
   displayRepair(car, repair){
-    car.vhr.serviceHistory.push(repair[1])
-    console.log(car);
-    
     cost = Math.floor((Math.random() * 1000) + 100);
+    car.vhr.serviceHistory.push({
+                                  date: moment().format('MM/DD/YYYY'), 
+                                  repair: repair[1],
+                                  cost: cost
+                                })
     this.score = this.score - cost    
     this.refs.toast.show("Your "+car.title+" "+repair.join(' ')+". This repair will cost $"+cost+".", 3000);
   }
 
   displayAccident(car, accident, isWriteOff){
-    car.vhr.accidents.push(accident)
+    cost = Math.floor((Math.random() * 5000) + 1000)
+    car.vhr.accidents.push({
+                            date: moment().format('MM/DD/YYYY'), 
+                            accident: accident,
+                            cost: cost
+                          })
     message = ""
     if(isWriteOff){
       //car is a write off, removing it from the game
@@ -258,7 +266,6 @@ export default class Game extends PureComponent {
         }
       }
     } else {
-      cost = Math.floor((Math.random() * 5000) + 1000)
       this.score = this.score - cost
       message = "Your "+car.title+" was in an "+accident+". Repairs will cost you $"+cost+"."
     }

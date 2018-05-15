@@ -5,6 +5,7 @@ import IconButton from 'react-native-vector-icons/MaterialCommunityIcons';
 import Car from './Car';
 import GridView from 'react-native-super-grid';
 import VehicleHistoryReportModal from './VehicleHistoryReport/VehicleHistoryReportModal';
+import VechicleHistoryReport from './VehicleHistoryReport/VehicleHistoryReport';
 import {Overlay} from 'react-native-elements';
 
 
@@ -17,7 +18,14 @@ export default class ScoreBoard extends PureComponent {
         cars: this.props.cars,
         carInformation: null,
         modalVisible: false,
-        overlay: false,
+        vhr: new VechicleHistoryReport({
+            vin: null,
+            bodyStyle: null,
+            countryOfAssembly: null,
+            cylinders: null,
+            fuelType: null,
+            yearMakeModel: null
+          })
     };
     this.carInformationTobeUpdated = null
     
@@ -120,7 +128,7 @@ export default class ScoreBoard extends PureComponent {
   render() {
     return (
         <View style={styles.container}>
-            <VehicleHistoryReportModal vhr={this.vhr} modalVisible={this.state.modalVisible} onClose={() => this.setState({modalVisible: false})}/>
+            <VehicleHistoryReportModal vhr={this.state.vhr} modalVisible={this.state.modalVisible} onClose={() => this.setState({modalVisible: false})}/>
             <Text>${this.state.score.toFixed(2)}</Text>
             <Text>{this.state.mileage} km</Text>
             <Text>${this.props.requiredPoints} to buy next car</Text>
@@ -134,8 +142,10 @@ export default class ScoreBoard extends PureComponent {
                                     <IconButton 
                                         onPress={() => this.onPressCar(item)} 
                                         onLongPress={() => {
-                                            this.vhr = item.vhr
-                                            this.setState({modalVisible: true})
+                                            this.setState({
+                                                vhr: item.vhr,
+                                                modalVisible: true
+                                            })
                                         }} 
                                         name='car' 
                                         size={50} 

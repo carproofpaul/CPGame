@@ -45,18 +45,21 @@ export default class VehicleHistoryReportModal extends PureComponent {
     this.state = {
         content: null
     };
-
-    this.details = [
-        <AccidentsDamage onClose={() => this.setState({content: null})}/>,
-        null,
-        null,
-        null,
-        null,
-        null,
-        <ServiceHistory onClose={() => this.setState({content: null})}/>,         
-    ];
     
   }
+
+  componentDidUpdate(){
+    this.details = [
+        <AccidentsDamage data={this.props.vhr.accidents} onClose={() => this.setState({content: null})}/>,
+        null,
+        null,
+        null,
+        null,
+        null,
+        <ServiceHistory data={this.props.vhr.serviceHistory} onClose={() => this.setState({content: null})}/>,         
+    ];
+  }
+
 /*
   render() {
     return (
@@ -114,6 +117,8 @@ export default class VehicleHistoryReportModal extends PureComponent {
 */
 
     render() {
+        //if(this.props.modalVisible) console.log(this.props.vhr);
+        
         const data = 
             this.state.content || 
             <View style={{flex: 1}}>
@@ -132,6 +137,7 @@ export default class VehicleHistoryReportModal extends PureComponent {
                             key={i}
                             title={item.title}
                             leftIcon={{ name: item.icon }}
+                            chevron={true}
                             onPress={() => this.setState({content: this.details[i]})}
                         />
                         ))
