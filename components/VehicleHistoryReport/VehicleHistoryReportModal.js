@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { AppRegistry, StyleSheet, Dimensions, View, Text, Image, Button, Alert, Modal } from "react-native";
+import { AppRegistry, StyleSheet, Dimensions, View, Text, Image, Button, Alert, Modal, ScrollView } from "react-native";
 import IconButton from 'react-native-vector-icons/MaterialCommunityIcons';
 import Car from '../Car';
 import {ListItem, Divider} from 'react-native-elements';
@@ -71,7 +71,7 @@ export default class VehicleHistoryReportModal extends PureComponent {
         //if(this.props.modalVisible) console.log(this.props.vhr);
         const data = 
             this.state.content || 
-            <View style={{flex: 1}}>
+            <ScrollView style={{flex: 1}}>
                 <IconButton
                     style={{margin: 15}}
                     size={30}
@@ -100,7 +100,7 @@ export default class VehicleHistoryReportModal extends PureComponent {
                         ))
                     }
                 </View>
-            </View>
+            </ScrollView>
 
         return(    
         <Modal

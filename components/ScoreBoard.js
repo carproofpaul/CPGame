@@ -99,7 +99,7 @@ export default class ScoreBoard extends PureComponent {
                         modalVisible: true
                     })
                 }}>
-            <Card wrapperStyle={styles.card}>
+            <Card title='click here to view the vehicle history report' titleStyle={{fontSize: 10, fontStyle: 'italic', fontWeight: 'normal'}} wrapperStyle={styles.card}>
                 <Text style={styles.title}>{car.title}</Text>
                 <Text style={styles.subTitle}>{car.mileage} km</Text>
                 <Text style={styles.subTitle}>Value: ${this.addCommas(car.price.toFixed(2))}</Text>
