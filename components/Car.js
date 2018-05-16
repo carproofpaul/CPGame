@@ -23,6 +23,9 @@ const REPAIRS = [
                   ['needs a', 'general check up'],
                   ['needs a', 'battery/charging system check'],
                   ['needs a', 'steering/suspension check'],
+                  ['needs a new', 'catalytic converter'],
+                  ['needs a new', 'fuel cap'],
+                  ['needs a new', 'oxygen sensor'],
                 ]
 
 const ACCIDENTS = [ 'front-end collision', 

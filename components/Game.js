@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { AppRegistry, StyleSheet, Dimensions, View, Text, Image, Button, Alert } from "react-native";
+import { AppRegistry, StyleSheet, Dimensions, View, Text, Image, Button, Alert, AsyncStorage, ActivityIndicator } from "react-native";
 import { GameLoop } from "react-native-game-engine";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Car from './Car';
@@ -11,160 +11,225 @@ import moment from 'moment';
 export default class Game extends PureComponent {
   constructor(props) {
     super(props);
-    this.key = 0
-    this.score = 0
-    this.totalLaps = 0
-    this.id = 0;
+    this.saveCounter = 0 //no need to save this
 
-    this.carInformation = [
-      {
-        title: '2010 Toyota Yaris',
-        speed : 15,
-        score : 100,
-        mileage : 150000,
-        price : 9459,
-        isOnTrack : false,
-        id: this.id++,
-        vhr: new VechicleHistoryReport({
-          vin: '2T1KU40E19C034127',
-          bodyStyle: 'Touring',
-          countryOfAssembly: 'Japan',
-          cylinders: 4,
-          fuelType: 'gas',
-          yearMakeModel: '2010 Toyota Yaris'
-        }),
-      },
-      {
-        title: '2010 Honda Civic',
-        speed : 17,
-        score : 110,
-        mileage : 210000,
-        price : 6890,
-        isOnTrack : false,
-        id: this.id++,
-        vhr: new VechicleHistoryReport({
-          vin: '2T1KU40E19C034127',
-          bodyStyle: 'Sport',
-          countryOfAssembly: 'Japan',
-          cylinders: 4,
-          fuelType: 'gas',
-          yearMakeModel: '2010 Honda Civic'
-        })
-      },
-      {
-        title: '2007 Pontiac Vibe',
-        speed : 11,
-        score : 120,
-        mileage : 250300,
-        price : 4999,
-        isOnTrack : false,
-        id: this.id++,
-        vhr: new VechicleHistoryReport({
-          vin: '2T1KU40E19C034127',
-          bodyStyle: 'Touring',
-          countryOfAssembly: 'USA',
-          cylinders: 4,
-          fuelType: 'gas',
-          yearMakeModel: '2007 Pontiac Vibe'
-        })
-      }
-    ]
-    this.newCars = [
-      {
-        title: '2010 Toyota Matrix XR',
-        speed : 21,
-        score : 200,
-        mileage : 210000,
-        price : 6890,
-        isOnTrack : false,
-        id: this.id++,
-        vhr: new VechicleHistoryReport({
-          vin: '2T1KU40E19C034127',
-          bodyStyle: 'Sport',
-          countryOfAssembly: 'Japan',
-          cylinders: 4,
-          fuelType: 'gas',
-          yearMakeModel: '2010 Toyota Matrix XR'
-        }),
-      },
-      {
-        title: '2009 Toyota Corolla CE',
-        speed : 17,
-        score : 120,
-        mileage : 155000,
-        price : 8375,
-        isOnTrack : false,
-        id: this.id++,
-        vhr: new VechicleHistoryReport({
-          vin: '2T1KU40E19C034127',
-          bodyStyle: 'Touring',
-          countryOfAssembly: 'Japan',
-          cylinders: 4,
-          fuelType: 'gas',
-          yearMakeModel: '2015 Toyota Corolla CE'
-        }),
-      },
-      {
-        title: '2017 Toyota Camry V6',
-        speed : 26,
-        score : 450,
-        mileage : 15788,
-        price : 26955,
-        isOnTrack : false,
-        id: this.id++,
-        vhr: new VechicleHistoryReport({
-          vin: '2T1KU40E19C034127',
-          bodyStyle: 'Sport',
-          countryOfAssembly: 'Japan',
-          cylinders: 6,
-          fuelType: 'gas',
-          yearMakeModel: '2017 Toyota Camry V6'
-        }),
-      },
-      {
-        title: '2018 Toyota Avalon',
-        speed : 24,
-        score : 600,
-        mileage : 100,
-        price : 45999,
-        isOnTrack : false,
-        id: this.id++,
-        vhr: new VechicleHistoryReport({
-          vin: '2T1KU40E19C034127',
-          bodyStyle: 'Luxury',
-          countryOfAssembly: 'Japan',
-          cylinders: 4,
-          fuelType: 'gas',
-          yearMakeModel: '2018 Toyota Avalon'
-        }),
-      },
-      {
-        title: '2018 Toyota RAV4 Limited',
-        speed : 20,
-        score : 740,
-        mileage : 100,
-        price : 29999,
-        isOnTrack : false,
-        id: this.id++,
-        vhr: new VechicleHistoryReport({
-          vin: '2T1KU40E19C034127',
-          bodyStyle: 'Limited',
-          countryOfAssembly: 'Japan',
-          cylinders: 6,
-          fuelType: 'gas',
-          yearMakeModel: '2018 Toyota RAV4 Limited'
-        }),
-      },
-    ]
-    this.carsOnTrack = []
+    //AsyncStorage.clear()
 
-    this.requiredPointForNewCar = this.newCars[0].price //the price of the first car in the newCars array
+    //load previous game
+    this.loadGame()
     
     //state{ components }
     this.state = {
+      ready : false,
       components : []
     };
 
+  }
+
+  async loadGame() {
+    try {
+      const gameData = await AsyncStorage.getItem('@CPGame:game');
+      if(gameData != null){
+        gameData = JSON.parse(gameData) //converting back
+        //load componenets
+        console.log("Loading previous game")
+        this.key = gameData[0]
+        this.score = gameData[1]
+        this.totalLaps = gameData[2]
+        this.id = gameData[3]
+        this.carInformation = gameData[4].slice()
+        for(i = 0; i < this.carInformation.length; i++){
+          //removing cars from track
+           if(this.carInformation[i].isOnTrack == true) this.carInformation[i].isOnTrack = false
+        }
+        console.log(this.carInformation)
+        
+        this.newCars = gameData[5].slice()
+        //this.carsOnTrack = gameData[6]
+        this.carsOnTrack = []
+        this.requiredPointForNewCar = gameData[7]
+
+      } else {
+        this.key = 0
+        this.score = 0
+        this.totalLaps = 0
+        this.id = 0;
+    
+        this.carInformation = [
+          {
+            title: '2010 Toyota Yaris',
+            speed : 15,
+            score : 100,
+            mileage : 150000,
+            price : 9459,
+            isOnTrack : false,
+            id: this.id++,
+            vhr: new VechicleHistoryReport({
+              vin: '2T1KU40E19C034127',
+              bodyStyle: 'Touring',
+              countryOfAssembly: 'Japan',
+              cylinders: 4,
+              fuelType: 'gas',
+              yearMakeModel: '2010 Toyota Yaris'
+            }),
+          },
+          {
+            title: '2010 Honda Civic',
+            speed : 17,
+            score : 110,
+            mileage : 210000,
+            price : 6890,
+            isOnTrack : false,
+            id: this.id++,
+            vhr: new VechicleHistoryReport({
+              vin: '2T1KU40E19C034127',
+              bodyStyle: 'Sport',
+              countryOfAssembly: 'Japan',
+              cylinders: 4,
+              fuelType: 'gas',
+              yearMakeModel: '2010 Honda Civic'
+            })
+          },
+          {
+            title: '2007 Pontiac Vibe',
+            speed : 11,
+            score : 120,
+            mileage : 250300,
+            price : 4999,
+            isOnTrack : false,
+            id: this.id++,
+            vhr: new VechicleHistoryReport({
+              vin: '2T1KU40E19C034127',
+              bodyStyle: 'Touring',
+              countryOfAssembly: 'USA',
+              cylinders: 4,
+              fuelType: 'gas',
+              yearMakeModel: '2007 Pontiac Vibe'
+            })
+          }
+        ]
+        this.newCars = [
+          {
+            title: '2010 Toyota Matrix XR',
+            speed : 21,
+            score : 200,
+            mileage : 210000,
+            price : 6890,
+            isOnTrack : false,
+            id: this.id++,
+            vhr: new VechicleHistoryReport({
+              vin: '2T1KU40E19C034127',
+              bodyStyle: 'Sport',
+              countryOfAssembly: 'Japan',
+              cylinders: 4,
+              fuelType: 'gas',
+              yearMakeModel: '2010 Toyota Matrix XR'
+            }),
+          },
+          {
+            title: '2009 Toyota Corolla CE',
+            speed : 17,
+            score : 120,
+            mileage : 155000,
+            price : 8375,
+            isOnTrack : false,
+            id: this.id++,
+            vhr: new VechicleHistoryReport({
+              vin: '2T1KU40E19C034127',
+              bodyStyle: 'Touring',
+              countryOfAssembly: 'Japan',
+              cylinders: 4,
+              fuelType: 'gas',
+              yearMakeModel: '2015 Toyota Corolla CE'
+            }),
+          },
+          {
+            title: '2017 Toyota Camry V6',
+            speed : 26,
+            score : 450,
+            mileage : 15788,
+            price : 26955,
+            isOnTrack : false,
+            id: this.id++,
+            vhr: new VechicleHistoryReport({
+              vin: '2T1KU40E19C034127',
+              bodyStyle: 'Sport',
+              countryOfAssembly: 'Japan',
+              cylinders: 6,
+              fuelType: 'gas',
+              yearMakeModel: '2017 Toyota Camry V6'
+            }),
+          },
+          {
+            title: '2018 Toyota Avalon',
+            speed : 24,
+            score : 600,
+            mileage : 100,
+            price : 45999,
+            isOnTrack : false,
+            id: this.id++,
+            vhr: new VechicleHistoryReport({
+              vin: '2T1KU40E19C034127',
+              bodyStyle: 'Luxury',
+              countryOfAssembly: 'Japan',
+              cylinders: 4,
+              fuelType: 'gas',
+              yearMakeModel: '2018 Toyota Avalon'
+            }),
+          },
+          {
+            title: '2018 Toyota RAV4 Limited',
+            speed : 20,
+            score : 740,
+            mileage : 100,
+            price : 29999,
+            isOnTrack : false,
+            id: this.id++,
+            vhr: new VechicleHistoryReport({
+              vin: '2T1KU40E19C034127',
+              bodyStyle: 'Limited',
+              countryOfAssembly: 'Japan',
+              cylinders: 6,
+              fuelType: 'gas',
+              yearMakeModel: '2018 Toyota RAV4 Limited'
+            }),
+          },
+        ]
+        this.carsOnTrack = []
+    
+        this.requiredPointForNewCar = this.newCars[0].price //the price of the first car in the newCars array
+      }
+
+      this.setState({ready: true})
+    } catch (error) {
+      console.log("Error retrieving data" + error);
+    }
+  }
+
+  async saveGame() {
+    gameData = []
+    gameData.push(this.key)
+    gameData.push(this.score)
+    gameData.push(this.totalLaps)
+    gameData.push(this.id)
+    gameData.push(this.carInformation)
+    gameData.push(this.newCars)
+    gameData.push(this.carsOnTrack)
+    gameData.push(this.requiredPointForNewCar)
+
+    try {
+      console.log("saving game...")
+      await AsyncStorage.setItem('@CPGame:game', JSON.stringify(gameData));
+    } catch (error) {
+      console.log("Error saving data" + error);
+    }
+  }
+
+  componentWillUpdate(){
+    if(this.saveCounter++ == 50){
+      this.saveGame()
+      this.saveCounter = 0
+    }
   }
   
   componentWillUnmount(){
@@ -266,6 +331,13 @@ export default class Game extends PureComponent {
   }
 
   render() {
+    if(this.state.ready == false){
+      return(
+        <View>
+           <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      )
+    }
     return (
       <GameLoop 
         style={styles.container} 
