@@ -1,6 +1,7 @@
 import React, { PureComponent } from "react";
 import { AppRegistry, StyleSheet, Dimensions, View, Text } from "react-native";
 import Game from './components/Game';
+import StartMenu from './components/StartMenu';
 
 export default class App extends PureComponent {
   constructor() {
@@ -13,7 +14,7 @@ export default class App extends PureComponent {
   render() {
     return (
       <View style={styles.container}>
-        <Game />
+        <StartMenu />
       </View>
     );
   }

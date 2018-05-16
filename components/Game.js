@@ -9,8 +9,8 @@ import Toast, {DURATION} from 'react-native-easy-toast';
 import moment from 'moment';
 
 export default class Game extends PureComponent {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.key = 0
     this.score = 0
     this.totalLaps = 0
@@ -160,12 +160,17 @@ export default class Game extends PureComponent {
 
     this.requiredPointForNewCar = this.newCars[0].price //the price of the first car in the newCars array
     
-
     //state{ components }
     this.state = {
       components : []
     };
 
+  }
+  
+  componentWillUnmount(){
+    for(i = 0; i < this.carsOnTrack.length; i++){
+      this.carsOnTrack[i].delete() //kill      
+    }
   }
 
   //callback
@@ -182,32 +187,6 @@ export default class Game extends PureComponent {
     this.carInformation.push(unsoldCar) //storing it for later
     if(this.newCars.length != 0) this.requiredPointForNewCar = this.newCars[0].price
     else this.requiredPointForNewCar = -1
-    /*
-    Alert.alert(
-      'New Car Available',
-      'Do you want to buy a ' + this.newCars[0].title + " for $" + this.newCars[0].price +"?",
-      [
-        {text: 'Yes!', onPress: () => {
-          this.score = this.score - this.requiredPointForNewCar
-          if(this.newCars.length !== 0) this.carInformation.push(this.newCars.shift());
-          if(this.newCars.length !== 0){
-            this.requiredPointForNewCar = this.newCars[0].price
-          } else {
-            this.requiredPointForNewCar = null
-          }
-          this.stop = false
-        }},
-        {text: 'Maybe Later', onPress: () => {
-          unsoldCar = this.newCars.shift()
-          unsoldCar.isOnTrack = null
-          this.carInformation.push(unsoldCar) //storing it for later
-          this.requiredPointForNewCar = this.newCars[0].price
-          this.stop = false
-        }},
-      ],
-      { cancelable: false }
-    )
-    */
   }
 
   addToLap(laps){

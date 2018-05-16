@@ -99,10 +99,11 @@ export default class ScoreBoard extends PureComponent {
                         modalVisible: true
                     })
                 }}>
-            <Card title='click here to view the vehicle history report' titleStyle={{fontSize: 10, fontStyle: 'italic', fontWeight: 'normal'}} wrapperStyle={styles.card}>
+            <Card wrapperStyle={styles.card}>
                 <Text style={styles.title}>{car.title}</Text>
                 <Text style={styles.subTitle}>{car.mileage} km</Text>
                 <Text style={styles.subTitle}>Value: ${this.addCommas(car.price.toFixed(2))}</Text>
+                <Text style={{fontSize: 10, fontStyle: 'italic', alignContent: 'center'}}>click here to view the vehicle history report</Text>
             </Card>
         </TouchableOpacity>
     }
@@ -141,7 +142,6 @@ export default class ScoreBoard extends PureComponent {
         else nextCar = ""
         return (
             <View style={styles.container}>
-                <Image style={{margin: 10, height: 25, width: 103.75}} source={{uri: 'https://www.carproof.com/public/images/CARPROOFlogo-primary_flat.png'}}/>            
                 <VehicleHistoryReportModal vhr={this.state.vhr} data={this.state.data} modalVisible={this.state.modalVisible} onClose={() => this.setState({modalVisible: false})}/>
                 <Card wrapperStyle={styles.card}>
                     <Text style={styles.title}>${this.addCommas(this.state.score.toFixed(2))}</Text>
@@ -191,7 +191,7 @@ export default class ScoreBoard extends PureComponent {
 
 const styles = StyleSheet.create({
     gridView: {
-        paddingTop: 50,
+        paddingTop: 20,
         flex: 1,
     },
     container: {
