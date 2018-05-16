@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { AppRegistry, StyleSheet, Dimensions, View, Text, Image, Button, Alert } from "react-native";
+import { AppRegistry, StyleSheet, Dimensions, View, Text, Image, Button, Alert, TouchableOpacity} from "react-native";
 import { GameLoop } from "react-native-game-engine";
 import IconButton from 'react-native-vector-icons/MaterialCommunityIcons';
 import Car from './Car';
@@ -80,7 +80,7 @@ export default class ScoreBoard extends PureComponent {
         }
     }
 
-    showCarInformation(car, index){
+    showCarInformation(car){
         this.carInformationTobeUpdated = car
         if(this.carInformationTobeUpdated == null) return
         accidents = ""
@@ -90,13 +90,21 @@ export default class ScoreBoard extends PureComponent {
             accidents = "Accident Report:\n"
             accidents = accidents + car.vhr.accidents.join('\n')
         }
-
+        this.carOnDisplay = car
         this.component = 
+        <TouchableOpacity onPress={() => {
+                    this.setState({
+                        vhr: car.vhr,
+                        data: car,
+                        modalVisible: true
+                    })
+                }}>
             <Card wrapperStyle={styles.card}>
                 <Text style={styles.title}>{car.title}</Text>
                 <Text style={styles.subTitle}>{car.mileage} km</Text>
                 <Text style={styles.subTitle}>Value: ${this.addCommas(car.price.toFixed(2))}</Text>
             </Card>
+        </TouchableOpacity>
     }
 
     getCarIconColour(x){
