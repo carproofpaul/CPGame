@@ -103,7 +103,7 @@ export default class ScoreBoard extends PureComponent {
                 <Text style={styles.title}>{car.title}</Text>
                 <Text style={styles.subTitle}>{car.mileage} km</Text>
                 <Text style={styles.subTitle}>Value: ${this.addCommas(car.price.toFixed(2))}</Text>
-                <Text style={{fontSize: 10, fontStyle: 'italic', alignContent: 'center'}}>click here to view the vehicle history report</Text>
+                <Text style={{fontSize: 10, fontStyle: 'italic', textAlign: 'center', marginTop: 5}}>click here to view the vehicle history report</Text>
             </Card>
         </TouchableOpacity>
     }
