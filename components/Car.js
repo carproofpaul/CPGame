@@ -127,7 +127,7 @@ export default class Car  {
   onLap(){
     //checking for upgrade 
     result = Math.floor((Math.random() * this.upgradeProbability))
-    if(result == 20){
+    if(result == 2){ //2 is a random number
       this.upgradeProbability = this.upgradeProbability * 2
       this.callbackMessage("Upgrade Available!")
       this.info.upgradeAvailable = true;

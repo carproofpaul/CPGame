@@ -7,6 +7,7 @@ import GridView from 'react-native-super-grid';
 import VehicleHistoryReportModal from './VehicleHistoryReport/VehicleHistoryReportModal';
 import VechicleHistoryReport from './VehicleHistoryReport/VehicleHistoryReport';
 import {Card} from 'react-native-elements';
+import moment from 'moment';
 
 
 export default class ScoreBoard extends PureComponent {
@@ -63,6 +64,11 @@ export default class ScoreBoard extends PureComponent {
                     this.props.payForCar(car.price/10) //paying for car
                     car.speed = car.speed + car.speed*0.1 // +10%
                     car.upgradeAvailable = false
+                    car.vhr.serviceHistory.push({
+                                                    date: moment().format('MM/DD/YYYY'), 
+                                                    repair: "speed upgrade",
+                                                    cost: (car.price/10).toFixed(0)
+                                                })
                 }},
                 {text: 'No', onPress: () => {
 
@@ -121,8 +127,8 @@ export default class ScoreBoard extends PureComponent {
                 }}>
             <Card wrapperStyle={styles.card}>
                 <Text style={styles.title}>{car.title}</Text>
-                <Text style={styles.subTitle}>{car.mileage} km</Text>
-                <Text style={styles.subTitle}>Value: ${this.addCommas(car.price.toFixed(2))}</Text>
+                {/* <Text style={styles.subTitle}>{car.mileage} km</Text> */}
+                {/* <Text style={styles.subTitle}>Value: ${this.addCommas(car.price.toFixed(2))}</Text> */}
                 <Text style={{fontSize: 10, fontStyle: 'italic', textAlign: 'center', marginTop: 5}}>click here to view the vehicle history report</Text>
             </Card>
         </TouchableOpacity>
