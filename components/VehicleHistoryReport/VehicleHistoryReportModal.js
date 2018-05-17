@@ -18,6 +18,7 @@ const list = [
                     title: 'Accident/Damage Reports',
                     icon: 'library-books',
                 },
+                /*
                 {
                     title: 'Lien Records',
                     icon: 'trending-down',
@@ -38,6 +39,7 @@ const list = [
                     title: 'Recalls',
                     icon: 'new-releases',
                 },
+                */
                 {
                     title: 'Service History',
                     icon: 'search',
@@ -57,12 +59,12 @@ export default class VehicleHistoryReportModal extends PureComponent {
   componentDidUpdate(){
     this.trueValue = <TrueValue data={this.props.data} onClose={() => this.setState({content: null})}/>
     this.details = [
-        <AccidentsDamage data={this.props.vhr.accidents} onClose={() => this.setState({content: null})}/>,
+        <AccidentsDamage data={this.props.vhr.accidents} onClose={() => this.setState({content: null})}/>, /*
         <LienRecords data={this.props.vhr.lienRecords} onClose={() => this.setState({content: null})}/>,
         <CanadianRegistration data={this.props.vhr.canadianRegistration} onClose={() => this.setState({content: null})}/>,
         <StolenStatus data={this.props.vhr.isStolen} onClose={() => this.setState({content: null})}/>,
         <UsHistory data={this.props.vhr.usHistory} onClose={() => this.setState({content: null})}/>,
-        <Recalls data={this.props.vhr.recalls} onClose={() => this.setState({content: null})}/>,
+        <Recalls data={this.props.vhr.recalls} onClose={() => this.setState({content: null})}/>, */
         <ServiceHistory data={this.props.vhr.serviceHistory} onClose={() => this.setState({content: null})}/>,         
     ];
   }

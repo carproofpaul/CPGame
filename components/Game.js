@@ -218,7 +218,6 @@ export default class Game extends PureComponent {
     gameData.push(this.requiredPointForNewCar)
 
     try {
-      console.log("saving game...")
       await AsyncStorage.setItem('@CPGame:game', JSON.stringify(gameData));
     } catch (error) {
       console.log("Error saving data" + error);
