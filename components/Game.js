@@ -2,6 +2,7 @@ import React, { PureComponent } from "react";
 import { AppRegistry, StyleSheet, Dimensions, View, Text, Image, Button, Alert, AsyncStorage, ActivityIndicator } from "react-native";
 import { GameLoop } from "react-native-game-engine";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import IconButton from 'react-native-vector-icons/MaterialCommunityIcons';
 import Car from './Car';
 import ScoreBoard from './ScoreBoard';
 import VechicleHistoryReport from './VehicleHistoryReport/VehicleHistoryReport';
@@ -63,6 +64,7 @@ export default class Game extends PureComponent {
             mileage : 150000,
             price : 9459,
             isOnTrack : false,
+            upgradeAvailable : false, 
             id: this.id++,
             vhr: new VechicleHistoryReport({
               vin: '2T1KU40E19C034127',
@@ -80,6 +82,7 @@ export default class Game extends PureComponent {
             mileage : 210000,
             price : 6890,
             isOnTrack : false,
+            upgradeAvailable : false, 
             id: this.id++,
             vhr: new VechicleHistoryReport({
               vin: '2T1KU40E19C034127',
@@ -97,6 +100,7 @@ export default class Game extends PureComponent {
             mileage : 250300,
             price : 4999,
             isOnTrack : false,
+            upgradeAvailable : false, 
             id: this.id++,
             vhr: new VechicleHistoryReport({
               vin: '2T1KU40E19C034127',
@@ -116,6 +120,7 @@ export default class Game extends PureComponent {
             mileage : 210000,
             price : 6890,
             isOnTrack : false,
+            upgradeAvailable : false, 
             id: this.id++,
             vhr: new VechicleHistoryReport({
               vin: '2T1KU40E19C034127',
@@ -133,6 +138,7 @@ export default class Game extends PureComponent {
             mileage : 155000,
             price : 8375,
             isOnTrack : false,
+            upgradeAvailable : false, 
             id: this.id++,
             vhr: new VechicleHistoryReport({
               vin: '2T1KU40E19C034127',
@@ -150,6 +156,7 @@ export default class Game extends PureComponent {
             mileage : 15788,
             price : 26955,
             isOnTrack : false,
+            upgradeAvailable : false, 
             id: this.id++,
             vhr: new VechicleHistoryReport({
               vin: '2T1KU40E19C034127',
@@ -167,6 +174,7 @@ export default class Game extends PureComponent {
             mileage : 100,
             price : 45999,
             isOnTrack : false,
+            upgradeAvailable : false, 
             id: this.id++,
             vhr: new VechicleHistoryReport({
               vin: '2T1KU40E19C034127',
@@ -184,6 +192,7 @@ export default class Game extends PureComponent {
             mileage : 100,
             price : 29999,
             isOnTrack : false,
+            upgradeAvailable : false, 
             id: this.id++,
             vhr: new VechicleHistoryReport({
               vin: '2T1KU40E19C034127',
@@ -324,6 +333,7 @@ export default class Game extends PureComponent {
                             (laps) => this.addToLap(laps), 
                             (car, repair) => this.displayRepair(car, repair),
                             (car, accident, isWriteOff) => this.displayAccident(car, accident, isWriteOff),
+                            (message) => this.refs.toast.show(message, 2000),
                             car
                             )
                   )
@@ -375,7 +385,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor:'transparent',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'flex-start'
   },
   carContainer: {
     flex : 1,

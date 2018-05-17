@@ -21,7 +21,7 @@ export default class Tutorial extends PureComponent {
             size={30}
             style={{margin: 15}}
             onPress={() => this.props.onBack()}
-            name='chevron-down' 
+            name='chevron-left' 
         />
         <View style={styles.container}>
             <Text style={styles.subTitleItalic}>

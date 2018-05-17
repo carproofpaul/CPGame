@@ -23,7 +23,6 @@ export default class StartMenu extends PureComponent {
   async isPreviousGameAvailable(){
     data = await AsyncStorage.getItem('@CPGame:game')
     if(data != null){
-        console.log("YES")
         //yes
         this.setState({
             buttons:

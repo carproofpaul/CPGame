@@ -50,7 +50,27 @@ export default class ScoreBoard extends PureComponent {
 
     onPressCar(car){
         index = this.state.cars.indexOf(car)
-        if(car.isOnTrack == null){
+        if(car.upgradeAvailable){
+            Alert.alert(
+                'Upgrade Available',
+                "Do you want to upgrade this car's speed for $" + (car.price/10).toFixed(2) +"?",
+                [
+                {text: 'Yes', onPress: () => {
+                    if(car.price/10 > this.state.score){
+                        this.props.toast.show("Sorry, you don't have enough money.", 3000)
+                        return
+                    }
+                    this.props.payForCar(car.price/10) //paying for car
+                    car.speed = car.speed + car.speed*0.5 // +%50
+                    car.upgradeAvailable = false
+                }},
+                {text: 'No', onPress: () => {
+
+                }},
+                ],
+                { cancelable: false }
+            )
+        } else if(car.isOnTrack == null){
             //available for purchase
             Alert.alert(
                 'Available for purchase',
@@ -108,9 +128,10 @@ export default class ScoreBoard extends PureComponent {
         </TouchableOpacity>
     }
 
-    getCarIconColour(x){
-        if(x == null) return '#d81c00' //red
-        else if(x) return '#efefef' //grey
+    getCarIconColour(car){
+        if(car.upgradeAvailable) return '#adccff' //baby blue
+        else if(car.isOnTrack == null) return '#d81c00' //red
+        else if(car.isOnTrack) return '#efefef' //grey
         else return '#000000' //black
     }
 
@@ -166,7 +187,7 @@ export default class ScoreBoard extends PureComponent {
                                                 }} 
                                                 name='car' 
                                                 size={50} 
-                                                color={this.getCarIconColour(item.isOnTrack)}
+                                                color={this.getCarIconColour(item)}
                                             />
                                         )
                         }

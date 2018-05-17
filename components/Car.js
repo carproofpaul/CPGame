@@ -40,6 +40,7 @@ export default class Car  {
               callbackLap,  
               callbackRepair, 
               callbackAccident, 
+              callbackMessage,
               info){
 
     this.info = info //info of the car: speed, score, mileage, price, and accidents(array)
@@ -49,6 +50,7 @@ export default class Car  {
     this.callbackLap = callbackLap //callback to notify the game of an new lap
     this.callbackRepair = callbackRepair //callback to display required maintenace
     this.callbackAccident = callbackAccident //callback to display an accident
+    this.callbackMessage = callbackMessage //callback to display messages as a toast
     this.laps = 0
 
 
@@ -121,6 +123,13 @@ export default class Car  {
   }
 
   onLap(){
+    //checking for upgrade 
+    x = Math.floor((Math.random() * 40))
+    if(x == 25 ){
+      this.callbackMessage("Upgrade Available!")
+      this.info.upgradeAvailable = true;
+    }
+
     this.laps++ //adding a lap
     this.callbackLap(1)
     this.info.mileage++
