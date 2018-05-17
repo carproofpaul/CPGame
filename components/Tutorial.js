@@ -42,6 +42,9 @@ export default class Tutorial extends PureComponent {
             <Text style={styles.subTitle}>
                 Long pressing on a car or clicking the information panel with display the car's vehicle history report. This report will provide you information regarding the car's maintenance and damage report.  
             </Text>
+            <Text style={styles.subTitle}>
+                If your car turns blue, it means that you can upgrade it by clicking on it and saying yes!
+            </Text>
         </View>
     </View>
     )

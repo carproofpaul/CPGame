@@ -53,6 +53,8 @@ export default class Car  {
     this.callbackMessage = callbackMessage //callback to display messages as a toast
     this.laps = 0
 
+    this.upgradeProbability = 25
+
 
     this.direction = {
       up:     {value: false, tag: 'UP'},
@@ -124,8 +126,9 @@ export default class Car  {
 
   onLap(){
     //checking for upgrade 
-    x = Math.floor((Math.random() * 40))
-    if(x == 25 ){
+    result = Math.floor((Math.random() * this.upgradeProbability))
+    if(result == 20){
+      this.upgradeProbability = this.upgradeProbability * 2
       this.callbackMessage("Upgrade Available!")
       this.info.upgradeAvailable = true;
     }

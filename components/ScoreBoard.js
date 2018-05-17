@@ -53,7 +53,7 @@ export default class ScoreBoard extends PureComponent {
         if(car.upgradeAvailable){
             Alert.alert(
                 'Upgrade Available',
-                "Do you want to upgrade this car's speed for $" + (car.price/10).toFixed(2) +"?",
+                "Do you want to upgrade this car's speed to by 10% for $" + (car.price/10).toFixed(2) +"?",
                 [
                 {text: 'Yes', onPress: () => {
                     if(car.price/10 > this.state.score){
@@ -61,7 +61,7 @@ export default class ScoreBoard extends PureComponent {
                         return
                     }
                     this.props.payForCar(car.price/10) //paying for car
-                    car.speed = car.speed + car.speed*0.5 // +%50
+                    car.speed = car.speed + car.speed*0.1 // +10%
                     car.upgradeAvailable = false
                 }},
                 {text: 'No', onPress: () => {
