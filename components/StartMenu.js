@@ -4,6 +4,7 @@ import { GameLoop } from "react-native-game-engine";
 import { Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Game from './Game';
+import Tutorial from './Tutorial';
 
 
 export default class StartMenu extends PureComponent {
@@ -12,7 +13,8 @@ export default class StartMenu extends PureComponent {
 
     this.state = {
         buttons : null,
-        play: false
+        play: false,
+        tutorial: false,
     };
 
     this.isPreviousGameAvailable()
@@ -61,15 +63,18 @@ export default class StartMenu extends PureComponent {
 
 
   render() {
+    if(this.state.play) component = <Game onBack={() => this.setState({play: false})}/>
+    if(this.state.tutorial) component = <Tutorial onBack={() => this.setState({tutorial: false})}/>
+      
     if(this.state.buttons == null){
         return( <View></View>)
-    } else if(this.state.play){
+    } else if(this.state.play || this.state.tutorial){
         return(
             <Modal
                 animationType="slide"
                 visible={true}
                 onRequestClose={() => this.setState({play: false})}>
-                    <Game onBack={() => this.setState({play: false})}/>
+                    {component}
             </Modal>
         )
     } else {
@@ -85,7 +90,7 @@ export default class StartMenu extends PureComponent {
                 {this.state.buttons}
                 <TouchableHighlight
                     style={styles.submit}
-                    onPress={() => null}
+                    onPress={() => this.setState({tutorial: true})}
                     underlayColor='#fff'>
                     <Text style={styles.submitText}>TUTORIAL</Text>
                 </TouchableHighlight>
