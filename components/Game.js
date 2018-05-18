@@ -351,6 +351,18 @@ export default class Game extends PureComponent {
       <GameLoop 
         style={styles.container} 
         onUpdate={() => this.setState({components : this.updateCars()})}>
+          <View style={styles.iconContainer}>
+            <IconButton
+                size={20}
+                onPress={() => this.props.onBack()}
+                name='close' 
+            />
+            <IconButton
+                size={20}
+                onPress={() => this.setState({hint: null})}
+                name='camera' 
+            />
+          </View>
           <Toast 
             ref="toast"
             fadeInDuration={750}
@@ -381,11 +393,16 @@ export default class Game extends PureComponent {
 }
 
 const styles = StyleSheet.create({
+  iconContainer: {
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    margin: 10,
+    backgroundColor:'transparent',
+  },
   container: {
     flex: 1,
-    backgroundColor:'transparent',
-    alignItems: 'center',
-    justifyContent: 'flex-start'
+    backgroundColor:'#fcfcfc',
+    justifyContent: 'space-between'
   },
   carContainer: {
     flex : 1,

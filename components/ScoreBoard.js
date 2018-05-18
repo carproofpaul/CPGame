@@ -70,7 +70,8 @@ export default class ScoreBoard extends PureComponent {
                         return
                     }
                     this.props.payForCar(car.price/10) //paying for car
-                    car.speed = car.speed + car.speed*0.1 // +10%
+                    car.speed = car.speed*1.1 // +10%
+                    car.score = car.score*1.1 // +10%
                     car.upgradeAvailable = false
                     car.vhr.serviceHistory.push({
                                                     date: moment().format('MM/DD/YYYY'), 
