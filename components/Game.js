@@ -8,6 +8,7 @@ import ScoreBoard from './ScoreBoard';
 import VechicleHistoryReport from './VehicleHistoryReport/VehicleHistoryReport';
 import Toast, {DURATION} from 'react-native-easy-toast';
 import moment from 'moment';
+import CameraScreen from './VisualVehicleReport/CameraScreen';
 
 export default class Game extends PureComponent {
   constructor(props) {
@@ -22,6 +23,7 @@ export default class Game extends PureComponent {
     //state{ components }
     this.state = {
       ready : false,
+      camera : false,
       components : []
     };
 
@@ -347,6 +349,10 @@ export default class Game extends PureComponent {
            <ActivityIndicator size="large" color="#0000ff" />
         </View>
       )
+    } else if(this.state.camera == true){
+      return(
+        <CameraScreen />
+      );
     }
     return (
       <GameLoop 
@@ -360,7 +366,7 @@ export default class Game extends PureComponent {
             />
             <IconButton
                 size={20}
-                onPress={() => this.setState({hint: null})}
+                onPress={() => this.setState({camera: true})}
                 name='camera' 
             />
           </View>
