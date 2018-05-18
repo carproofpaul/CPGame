@@ -28,6 +28,14 @@ export default class ScoreBoard extends PureComponent {
                 yearMakeModel: null
             }),
             data: null,
+            hint:       <View style={{flexDirection: 'column'}}>
+                            <IconButton
+                                size={15}
+                                onPress={() => this.setState({hint: null})}
+                                name='close' 
+                            />
+                            <Text style={styles.hint}>Long press on car to view the vehicle history report</Text>
+                        </View>
         };
         this.carInformationTobeUpdated = null
         
@@ -198,7 +206,8 @@ export default class ScoreBoard extends PureComponent {
                                         )
                         }
                 />
-                {this.component}
+                {this.state.hint}
+                {/*this.component*/}
             </View>
         );
     }
@@ -246,4 +255,9 @@ const styles = StyleSheet.create({
         fontSize: 15,
         textAlign: 'center',
     },
+    hint: {
+        fontSize: 13,
+        textAlign: 'center',
+        fontStyle: 'italic',
+    }
 });
