@@ -307,6 +307,7 @@ export default class Game extends PureComponent {
                             accident: accident,
                             cost: cost
                           })
+    car.price = car.price - cost/2
     message = ""
     if(isWriteOff){
       //car is a write off, removing it from the game
