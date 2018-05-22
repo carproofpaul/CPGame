@@ -86,7 +86,7 @@ export default class Car  {
 
   isMaintenaceRequired(){
     //1 out of 100 chance
-    return Math.floor((Math.random() * 100) + 1) == Math.floor((Math.random() * 100 ) + 1)
+    return Math.floor((Math.random() * 20) + 1) == Math.floor((Math.random() * 20 ) + 1)
   }
 
   isInvolvedInAccident(){

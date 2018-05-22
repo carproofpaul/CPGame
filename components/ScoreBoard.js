@@ -76,7 +76,8 @@ export default class ScoreBoard extends PureComponent {
                     car.vhr.serviceHistory.push({
                                                     date: moment().format('MM/DD/YYYY'), 
                                                     repair: "speed upgrade",
-                                                    cost: (car.price/10).toFixed(0)
+                                                    cost: (car.price/10).toFixed(0),
+                                                    odometer: car.mileage,
                                                 })
                 }},
                 {text: 'No', onPress: () => {

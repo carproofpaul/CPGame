@@ -19,17 +19,30 @@ export default class ServiceHistory extends PureComponent {
 
     this.service = {
         tableHead: ['Date', 'Address', 'Data Source', 'Type of Record', 'Detail', 'Odometer'],
-        tableData: [
-            ['02/28/2007', 'Caledon, Ontario', 'AutoMax Pre-Owned Supercentre', 'Service Record', 'Vehicle serviced', '24,554 km'],
-            ['04/28/2008', 'Winnipeg, Alberta', 'Winnipeg Honda', 'Service Record', 'Vehicle serviced', '27,954 km'],
-            ['01/28/2010', 'Winnipeg, Alberta', 'Alfa Romeo of Winnipeg', 'Service Record', 'Recommended maintenance performed', '29,354 km'],
-        ]
+        tableData: []
     }
+
+    this.createTableData()
 
     this.state = {
         imgWidth: 0,
         imgHeight: 0,
     };
+  }
+  
+  createTableData(){
+      for(i = 0; i < this.props.data.length; i++){
+          this.service.tableData.push(
+            [
+                this.props.data[i].date, 
+                'Caledon, Ontario', 
+                'AutoMax Pre-Owned Supercentre', 
+                'Service Record', 
+                this.props.data[i].repair, 
+                this.props.data[i].odometer+' km'
+            ]
+          )
+      }
   }
 
 
@@ -58,6 +71,9 @@ export default class ServiceHistory extends PureComponent {
     else component = null
 
     component = null //test
+
+    console.log(this.props.data);
+    
 
     return(
     <View style={styles.container}>

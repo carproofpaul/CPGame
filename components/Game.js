@@ -296,7 +296,8 @@ export default class Game extends PureComponent {
     car.vhr.serviceHistory.push({
                                   date: moment().format('MM/DD/YYYY'), 
                                   repair: repair[1],
-                                  cost: cost
+                                  cost: cost,
+                                  odometer: car.mileage
                                 })
     this.score = this.score - cost    
     this.refs.toast.show("Your "+car.title+" "+repair.join(' ')+". This repair will cost $"+cost+".", 3000);
