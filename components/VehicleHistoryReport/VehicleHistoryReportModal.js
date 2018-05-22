@@ -65,7 +65,7 @@ export default class VehicleHistoryReportModal extends PureComponent {
     this.trueValue = <TrueValue data={this.props.data} onClose={() => this.setState({content: null})}/>
     this.details = [
         <VehicleOverview data={this.props.data} onClose={() => this.setState({content: null})}/>,
-        <AccidentsDamage data={this.props.vhr.accidents} onClose={() => this.setState({content: null})}/>, /*
+        <AccidentsDamage data={this.props.vhr} onClose={() => this.setState({content: null})}/>, /*
         <LienRecords data={this.props.vhr.lienRecords} onClose={() => this.setState({content: null})}/>,
         <CanadianRegistration data={this.props.vhr.canadianRegistration} onClose={() => this.setState({content: null})}/>,
         <StolenStatus data={this.props.vhr.isStolen} onClose={() => this.setState({content: null})}/>,
