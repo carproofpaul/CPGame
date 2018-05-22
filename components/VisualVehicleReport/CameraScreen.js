@@ -1,6 +1,7 @@
 import { Constants, Camera, FileSystem, Permissions } from 'expo';
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Slider, Vibration, Dimensions, Image} from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { StyleSheet, Text, View, TouchableOpacity, Slider, Vibration, Dimensions, Image, Modal} from 'react-native';
 
 const flashModeOrder = {
   off: 'on',
@@ -55,54 +56,62 @@ export default class CameraScreen extends React.Component {
 
   renderCamera() {
     return (
-      <Camera
-        ref={ref => {
-          this.camera = ref;
-        }}
-        style={{
-          flex: 1,
-        }}
-        type={this.state.type}
-        flashMode={this.state.flash}
-        autoFocus={this.state.autoFocus}
-        zoom={this.state.zoom}
-        whiteBalance={this.state.whiteBalance}
-        ratio={this.state.ratio}
-        focusDepth={this.state.depth}>
-        <View
-          style={{
-            flex: 0.5,
-            backgroundColor: 'transparent',
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            paddingTop: Constants.statusBarHeight / 2,
-          }}>
-          <TouchableOpacity style={styles.flipButton} onPress={this.toggleFacing.bind(this)}>
-            <Text style={styles.flipText}> FLIP </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.flipButton} onPress={this.toggleFlash.bind(this)}>
-            <Text style={styles.flipText}> FLASH: {this.state.flash} </Text>
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor: 'transparent',
-          }}>
-          <TouchableOpacity
-            style={[styles.flipButton, styles.picButton, { position: 'absolute', left: Dimensions.get('window').width/2-50, bottom: 20 }]}
-            onPress={this.takePicture.bind(this)}>
-            <Text style={styles.flipText}> SNAP </Text>
-          </TouchableOpacity>
-        </View>
-      </Camera>
+      <Modal
+        animationType="fade"
+        visible={true}
+        onRequestClose={() => this.props.onBack()}>
+          <Camera
+            ref={ref => {
+              this.camera = ref;
+            }}
+            style={{
+              flex: 1,
+            }}
+            type={this.state.type}
+            flashMode={this.state.flash}
+            autoFocus={this.state.autoFocus}
+            zoom={this.state.zoom}
+            whiteBalance={this.state.whiteBalance}
+            ratio={this.state.ratio}
+            focusDepth={this.state.depth}>
+            <View
+              style={{
+                flex: 0.5,
+                backgroundColor: 'transparent',
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                paddingTop: Constants.statusBarHeight / 2,
+              }}>
+              <TouchableOpacity style={styles.flipButton} onPress={() => this.props.onBack()}>
+                <Icon name='arrow-left' size={25} color='#fff'/>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.flipButton} onPress={this.toggleFacing.bind(this)}>
+                <Text style={styles.flipText}> FLIP </Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.flipButton} onPress={this.toggleFlash.bind(this)}>
+                <Text style={styles.flipText}> FLASH: {this.state.flash} </Text>
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: 'transparent',
+              }}>
+              <TouchableOpacity
+                style={[styles.flipButton, styles.picButton, { position: 'absolute', left: Dimensions.get('window').width/2-50, bottom: 20 }]}
+                onPress={this.takePicture.bind(this)}>
+                <Text style={styles.flipText}> SNAP </Text>
+              </TouchableOpacity>
+            </View>
+          </Camera>
+      </Modal>
     );
   }
 
   render() {
-    //test
-    console.log(this.state.image)    
     if(this.state.image != null) {
+      //Do something with the image
+      //e.g. make api call to analyse it
       return(
         <Image 
           style={{flex: 1, height: Dimensions.get('window').height, width: Dimensions.get('window').width}} 

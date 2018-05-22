@@ -351,7 +351,7 @@ export default class Game extends PureComponent {
       )
     } else if(this.state.camera == true){
       return(
-        <CameraScreen />
+        <CameraScreen onBack={() => this.setState({camera: false})}/>
       );
     }
     return (
@@ -362,7 +362,7 @@ export default class Game extends PureComponent {
             <IconButton
                 size={20}
                 onPress={() => this.props.onBack()}
-                name='close' 
+                name='arrow-left' 
             />
             <IconButton
                 size={20}
