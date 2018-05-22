@@ -59,13 +59,12 @@ export default class AccidentsDamage extends PureComponent {
 
 
   componentDidMount() {
-    Image.getSize('https://reports.carproof.com/Content/Report/Headers/Accidents/2_en.png', (width, height) => {
-      // calculate image width and height 
-      const screenWidth = Dimensions.get('window').width
-      const scaleFactor = width / screenWidth
-      const imageHeight = height / scaleFactor
-      this.setState({imgWidth: screenWidth, imgHeight: imageHeight})
-    })
+    width = 620
+    height = 45
+    const screenWidth = Dimensions.get('window').width
+    const scaleFactor = width / screenWidth
+    const imageHeight = height / scaleFactor
+    this.setState({imgWidth: screenWidth, imgHeight: imageHeight})
   }
 
   getRowWidths(x){
@@ -89,6 +88,7 @@ export default class AccidentsDamage extends PureComponent {
     <View style={styles.container}>
         <IconButton
             size={30}
+            style={{marginHorizontal: 15, marginTop: 15, marginBottom: 5}}
             onPress={() => this.props.onClose()}
             name='chevron-down' 
         />
@@ -97,9 +97,9 @@ export default class AccidentsDamage extends PureComponent {
             <ScrollView>
                 <View style={styles.inner}>
                     <Image 
-                        style={{width: imgWidth-30, height: imgHeight}} 
+                        style={{width: imgWidth-30, height: imgHeight+10}} 
                         resizeMode='contain'
-                        source={{uri: 'https://reports.carproof.com/Content/Report/Headers/Accidents/2_en.png'}}
+                        source={require('../../../assets/header_accidents.png')}
                     />
                     <View style={{justifyContent: 'flex-start', marginBottom: 15}}>
                         <Text style={{marginTop: 10, marginBottom: 10, textAlign: 'left'}}>
@@ -172,11 +172,11 @@ export default class AccidentsDamage extends PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex : 1,
-    margin: 15
   },
   inner: {
     alignItems: 'center',
     flex : 1,
+    margin: 15,
   },
   title: {
     fontSize: 18,

@@ -1,44 +1,98 @@
 import React, { PureComponent } from "react";
-import { AppRegistry, StyleSheet, Dimensions, View, Text, Image, Button, Alert, Modal } from "react-native";
+import { AppRegistry, StyleSheet, Dimensions, View, Text, Image, Button, Alert, Modal, ScrollView } from "react-native";
 import { GameLoop } from "react-native-game-engine";
 import IconButton from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ListItem, Divider} from 'react-native-elements';
+import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
+
+const list = [
+    {
+        title: 'Accident/Damage Reports',
+        icon: 'library-books',
+    },    
+];
 
 
 export default class ServiceHistory extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
 
+    this.service = {
+        tableHead: ['Date', 'Address', 'Data Source', 'Type of Record', 'Detail', 'Odometer'],
+        tableData: [
+            ['02/28/2007', 'Caledon, Ontario', 'AutoMax Pre-Owned Supercentre', 'Service Record', 'Vehicle serviced', '24,554 km'],
+            ['04/28/2008', 'Winnipeg, Alberta', 'Winnipeg Honda', 'Service Record', 'Vehicle serviced', '27,954 km'],
+            ['01/28/2010', 'Winnipeg, Alberta', 'Alfa Romeo of Winnipeg', 'Service Record', 'Recommended maintenance performed', '29,354 km'],
+        ]
+    }
+
+    this.state = {
+        imgWidth: 0,
+        imgHeight: 0,
     };
   }
 
+
+  componentDidMount() {
+    width = 620
+    height = 45
+    const screenWidth = Dimensions.get('window').width
+    const scaleFactor = width / screenWidth
+    const imageHeight = height / scaleFactor
+    this.setState({imgWidth: screenWidth, imgHeight: imageHeight})
+  }
+
+  getRowWidths(x){
+    arr = []
+    for(i = 0; i < x; i++){
+        arr.push(125) //width
+    }
+    return arr
+  }
+
+
   render() {
+    const {imgWidth, imgHeight} = this.state
+
     if(this.props.data.length == 0) component = <Text style={{fontStyle: 'italic', textAlign: 'center'}}>No History Available</Text>
     else component = null
+
+    component = null //test
 
     return(
     <View style={styles.container}>
         <IconButton
             size={30}
+            style={{marginHorizontal: 15, marginTop: 15, marginBottom: 5}}
             onPress={() => this.props.onClose()}
             name='chevron-down' 
         />
         {
             component ||
-            <View>
-                {
-                    this.props.data.map((item, i) => (
-                    <ListItem
-                        key={i}
-                        title={item.repair}
-                        subtitle={item.date}
-                        rightTitle={'$'+item.cost}
+            <ScrollView>
+                <View style={styles.inner}>
+                    <Image 
+                        style={{width: imgWidth-30, height: imgHeight+10}} 
+                        resizeMode='contain'
+                        source={require('../../../assets/header_accidents.png')}
                     />
-                    ))
-                }
-            </View>
+                    <View style={{justifyContent: 'flex-start', marginBottom: 15}}>
+                        { /* Service History */ }
+                        <Text style={styles.title}>Service History</Text>
+                        <Text style={{textAlign: 'left', marginBottom: 10}}>
+                            These are records of service performed on the vehicle. These are the records reported to CARPROOF when this report was run – it is possible that service has occurred that is not captured here.
+                        </Text>
+                        <ScrollView horizontal={true}>
+                            <Table borderStyle={{borderWidth: 0}}>
+                                <Row data={this.service.tableHead} style={styles.head} textStyle={styles.text} widthArr={this.getRowWidths(6)}/>
+                                <Divider style={{backgroundColor: '#000'}} />
+                                <Rows data={this.service.tableData}  textStyle={styles.text} widthArr={this.getRowWidths(6)}/>
+                                <Divider style={{backgroundColor: '#000'}} />
+                            </Table>
+                        </ScrollView>
+                    </View>
+                </View>
+            </ScrollView>
         }
     </View>
     )
@@ -47,9 +101,20 @@ export default class ServiceHistory extends PureComponent {
 }
 
 const styles = StyleSheet.create({
-  container : {
+  container: {
     flex : 1,
-    margin: 15
   },
-
+  inner: {
+    alignItems: 'center',
+    flex : 1,
+    margin: 15,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 7,
+    marginTop: 7
+  },
+  head: { height: 40 },
+  text: { margin: 6 }
 });
