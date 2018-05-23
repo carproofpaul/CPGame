@@ -308,7 +308,8 @@ export default class Game extends PureComponent {
     car.vhr.accidents.push({
                             date: moment().format('MM/DD/YYYY'), 
                             accident: accident,
-                            cost: cost
+                            cost: cost,
+                            odometer: car.mileage
                           })
     car.price = car.price - cost/2
     message = ""

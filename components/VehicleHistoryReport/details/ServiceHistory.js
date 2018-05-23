@@ -30,24 +30,38 @@ export default class ServiceHistory extends PureComponent {
     };
   }
   
-  createTableData(){
-      for(i = 0; i < this.props.data.length; i++){
-          this.service.tableData.push(
-            [
-                this.props.data[i].date, 
-                'Caledon, Ontario', 
-                'AutoMax Pre-Owned Supercentre', 
-                'Service Record', 
-                this.props.data[i].repair, 
-                this.props.data[i].odometer+' km'
-            ]
-          )
-      }
-  }
+    createTableData(){
+        if(this.props.data.length == 0){
+            this.service.tableData.push(
+                [
+                    'No reported service found', 
+                    '', 
+                    '',
+                    '', 
+                    '', 
+                    '', 
+                    ''
+                ]       
+            )
+        } else {
+            for(i = 0; i < this.props.data.length; i++){
+                this.service.tableData.push(
+                    [
+                        this.props.data[i].date, 
+                        'Caledon, Ontario', 
+                        'AutoMax Pre-Owned Supercentre', 
+                        'Service Record', 
+                        this.props.data[i].repair, 
+                        this.props.data[i].odometer+' km'
+                    ]
+                )
+            }
+        }
+    }
 
 
   componentDidMount() {
-    width = 620
+    width = 426
     height = 45
     const screenWidth = Dimensions.get('window').width
     const scaleFactor = width / screenWidth
@@ -90,7 +104,7 @@ export default class ServiceHistory extends PureComponent {
                     <Image 
                         style={{width: imgWidth-30, height: imgHeight+10}} 
                         resizeMode='contain'
-                        source={require('../../../assets/header_accidents.png')}
+                        source={require('../../../assets/service_history.png')}
                     />
                     <View style={{justifyContent: 'flex-start', marginBottom: 15}}>
                         { /* Service History */ }
@@ -123,7 +137,9 @@ const styles = StyleSheet.create({
   inner: {
     alignItems: 'center',
     flex : 1,
-    margin: 15,
+    marginTop: 5,
+    marginHorizontal: 15,
+    marginBottom: 15
   },
   title: {
     fontSize: 18,

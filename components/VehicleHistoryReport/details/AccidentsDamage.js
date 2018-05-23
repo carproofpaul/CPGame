@@ -27,11 +27,10 @@ export default class AccidentsDamage extends PureComponent {
 
     this.accidents = {
         tableHead: ['Incident Date', 'Estimate Location', 'Estimate Date', 'Type of Record', 'Detail', 'Amount', 'Odometer'],
-        tableData: [
-            ['02/28/2007', 'Caledon, Ontario', '03/03/2007', 'Estimate', 'Right front corner', '$2,305', '12,223 km'],
-            ['04/25/2010', 'Guelph, Ontario', '04/30/2010', 'Estimate', 'Left rear corner', '$3,345', '15,623 km'],
-        ]
+        tableData: []
     }
+
+    this.loadAccidentData()
 
     this.insurance = {
         tableHead: ['Incident Date', 'Incident Location', 'Type of Record', 'Detail', 'Amount', 'Odometer'],
@@ -55,6 +54,36 @@ export default class AccidentsDamage extends PureComponent {
         imgWidth: 0,
         imgHeight: 0,
     };
+  }
+
+  loadAccidentData(){
+    if(this.props.data.accidents.length == 0){
+        this.accidents.tableData.push(
+            [
+                'No reported accidents found', 
+                '', 
+                '',
+                '', 
+                '', 
+                '', 
+                ''
+            ]       
+        )
+    } else {
+        for(i = 0; i < this.props.data.accidents.length; i++){
+            this.accidents.tableData.push(
+                [
+                    this.props.data.accidents[i].date, 
+                    'Caledon, Ontario', 
+                    this.props.data.accidents[i].date,
+                    'Estimate', 
+                    this.props.data.accidents[i].accident, 
+                    '$'+this.props.data.accidents[i].cost, 
+                    this.props.data.accidents[i].odometer+' km'
+                ]
+            )
+        }
+    }
   }
 
 
@@ -83,6 +112,9 @@ export default class AccidentsDamage extends PureComponent {
     else component = null
 
     component = null //test
+
+    console.log(this.props.data.accidents);
+    
 
     return(
     <View style={styles.container}>
