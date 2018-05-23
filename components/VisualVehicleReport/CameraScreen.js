@@ -1,7 +1,7 @@
 import { Constants, Camera, FileSystem, Permissions } from 'expo';
 import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { StyleSheet, Text, View, TouchableOpacity, Slider, Vibration, Dimensions, Image, Modal} from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Slider, Vibration, Dimensions, Image, Modal, Alert, ActivityIndicator} from 'react-native';
 
 const flashModeOrder = {
   off: 'on',
@@ -16,6 +16,7 @@ export default class CameraScreen extends React.Component {
     permissionsGranted: null,
     ratio: '16:9',
     image: null,
+    loading: false,
   };
 
   async componentWillMount() {
@@ -108,10 +109,51 @@ export default class CameraScreen extends React.Component {
     );
   }
 
+  makeCall(data){
+    /*** TODO: Add binary stream for uploading images
+    
+    //var image = {image: "https://i1.wp.com/wildsau.ca/wp-content/uploads/2013/06/front-quarter_.jpg?fit=1280%2C853"};
+
+    var xmlhttp = new XMLHttpRequest();
+    var result;
+
+    console.log(data)
+
+    xmlhttp.onreadystatechange = (function () {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+            result = xmlhttp.responseText;
+            json = JSON.parse(result)
+
+            console.log(json);
+            
+            Alert.alert(
+                'Car Detected',
+                'License Plate: ' + json.objects[0].vehicleAnnotation.licenseplate.attributes.system.string.name + "\n" +
+                'Make: '+ json.objects[0].vehicleAnnotation.attributes.system.make.name + "\n" +
+                'Model: '+ json.objects[0].vehicleAnnotation.attributes.system.model.name + "\n" +
+                'Colour: '+ json.objects[0].vehicleAnnotation.attributes.system.color.name + "\n",
+                [
+                  {text: 'OK', onPress: () => this.setState({image: null})},
+                ],
+                { cancelable: true }
+            )
+
+        } else {
+        console.log(xmlhttp)
+        }
+    }).bind(this)
+
+    xmlhttp.open("POST", "https://dev.sighthoundapi.com/v1/recognition?objectType=vehicle,licenseplate");
+    xmlhttp.setRequestHeader("Content-type", "application/octet-stream");
+    xmlhttp.setRequestHeader("X-Access-Token", "zGYv5QFWLWQuGuXW54FsP6pzIyq9oCtQyqpa");
+    xmlhttp.send(data);
+
+    ***/
+  }
+
   render() {
     if(this.state.image != null) {
-      //Do something with the image
-      //e.g. make api call to analyse it
+      this.makeCall(this.state.image)
       return(
         <Image 
           style={{flex: 1, height: Dimensions.get('window').height, width: Dimensions.get('window').width}} 

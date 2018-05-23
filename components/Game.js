@@ -8,7 +8,7 @@ import ScoreBoard from './ScoreBoard';
 import VechicleHistoryReport from './VehicleHistoryReport/VehicleHistoryReport';
 import Toast, {DURATION} from 'react-native-easy-toast';
 import moment from 'moment';
-import CameraScreen from './VisualVehicleReport/CameraScreen';
+import AnalysePhoto from './VisualVehicleReport/AnalysePhoto';
 
 export default class Game extends PureComponent {
   constructor(props) {
@@ -353,7 +353,7 @@ export default class Game extends PureComponent {
       )
     } else if(this.state.camera == true){
       return(
-        <CameraScreen onBack={() => this.setState({camera: false})}/>
+        <AnalysePhoto onBack={() => this.setState({camera: false})}/>
       );
     }
     return (
