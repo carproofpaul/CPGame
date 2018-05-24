@@ -112,41 +112,99 @@ export default class CameraScreen extends React.Component {
     );
   }
 
+  displayResults(car){
+    Alert.alert(
+      'Car Detected',
+      'License plate: ' + car.licensePlate + "\n" +
+      'Make: ' + car.make + "\n" +
+      'Model: ' + car.model + "\n" +
+      'Colour: ' + car.color + "\n" +
+      'Recognition Confidence: ' + car.confidence.toFixed(2)*100,
+      [
+        {text: 'OK', onPress: () => this.setState({image: null})},
+      ],
+      { cancelable: false }
+    )
+  }
 
-  makeCall(file){
+  displayError(error){
+    Alert.alert(
+      'Error',
+      error,
+      [
+        {text: 'OK', onPress: () => this.setState({image: null})},
+      ],
+      { cancelable: false }
+    )
+  }
 
-    /*
-    fetch('https://api.cloudinary.com/v1_1/dlic95ed5/image/upload', {
-      method: 'POST',
-      body: {
-        file: file.base64,
-        upload_preset: 'tqcsiwue'
-      }
-    }).then(res => {
-      console.log(res)
-    });
-
-
-    var image = {image: file.base64};
+  getCarData(url){
+    var image = {image: url};
     var xmlhttp = new XMLHttpRequest();
     var result;
     
-    xmlhttp.onreadystatechange = function () {
+    xmlhttp.onreadystatechange = (function () {
       if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-        result = xmlhttp.responseText;
-        console.log(result)
-      } else {
-        console.log("ERROR")
-        console.log(xmlhttp)
+        result = JSON.parse(xmlhttp.responseText);
+
+        if(result.objects.length == 0){
+          this.displayError("No car found.")
+          return
+        } else if(result.objects[0].vehicleAnnotation.recognitionConfidence === 0){
+          this.displayError("Recognition confidence is zero.")
+          return
+        }
+
+        console.log(result.objects[0].vehicleAnnotation.recognitionConfidence)
+
+        car = {
+          licensePlate: result.objects[0].vehicleAnnotation.licenseplate.attributes.system.string.name,
+          make: result.objects[0].vehicleAnnotation.attributes.system.make.name,
+          model: result.objects[0].vehicleAnnotation.attributes.system.model.name,
+          color: result.objects[0].vehicleAnnotation.attributes.system.color.name,
+          confidence: result.objects[0].vehicleAnnotation.recognitionConfidence
+        }
+
+        console.log(car)
+        this.displayResults(car)
       }
-    }
+    }).bind(this)
     
     xmlhttp.open("POST", "https://dev.sighthoundapi.com/v1/recognition?objectType=vehicle,licenseplate");
-    xmlhttp.setRequestHeader("Content-type", "application/octet-stream");
+    xmlhttp.setRequestHeader("Content-type", "application/json");
     xmlhttp.setRequestHeader("X-Access-Token", "zGYv5QFWLWQuGuXW54FsP6pzIyq9oCtQyqpa");
-    xmlhttp.send(file.base64);
+    xmlhttp.send(JSON.stringify(image));
+  }
 
-    */
+
+  makeCall(file){
+
+    var fd = new FormData();
+    var xmlhttp = new XMLHttpRequest();
+    var result;
+    
+    xmlhttp.onreadystatechange = (function () {
+      if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+        result = JSON.parse(xmlhttp.responseText);
+        this.getCarData(result.url)
+      } else if(xmlhttp.readyState === 4 && xmlhttp.status !== 200){
+        console.log(xmlhttp)
+        //this.displayError(xmlhttp)
+      }
+    }).bind(this)
+    
+    xmlhttp.open("POST", "https://api.cloudinary.com/v1_1/dlic95ed5/image/upload", true);
+    xmlhttp.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    xmlhttp.setRequestHeader("Content-type", "multipart/form-data");
+    xmlhttp.setRequestHeader("X-Access-Token", "zGYv5QFWLWQuGuXW54FsP6pzIyq9oCtQyqpa");
+
+    fd.append('upload_preset', 'tqcsiwue');
+    fd.append('file', {
+      uri: file.uri,
+      type: 'image/jpeg',
+      name: 'file',
+    });
+    xmlhttp.send(fd);
 
   }
 
