@@ -42,7 +42,7 @@ export default class ScoreBoard extends PureComponent {
     }
 
     componentDidUpdate(){
-        this.showCarInformation(this.carInformationTobeUpdated)
+        //this.showCarInformation(this.carInformationTobeUpdated)
         this.setState({
             score: this.props.score,
             mileage: this.props.mileage
@@ -64,25 +64,25 @@ export default class ScoreBoard extends PureComponent {
                 'Upgrade Available',
                 "Do you want to upgrade this car's speed to by 10% for $" + (car.price/10).toFixed(2) +"?",
                 [
-                {text: 'Yes', onPress: () => {
-                    if(car.price/10 > this.state.score){
-                        this.props.toast.show("Sorry, you don't have enough money.", 3000)
-                        return
-                    }
-                    this.props.payForCar(car.price/10) //paying for car
-                    car.speed = car.speed*1.1 // +10%
-                    car.score = car.score*1.1 // +10%
-                    car.upgradeAvailable = false
-                    car.vhr.serviceHistory.push({
-                                                    date: moment().format('MM/DD/YYYY'), 
-                                                    repair: "speed upgrade",
-                                                    cost: (car.price/10).toFixed(0),
-                                                    odometer: car.mileage,
-                                                })
-                }},
-                {text: 'No', onPress: () => {
-
-                }},
+                    {text: 'Yes', onPress: () => {
+                        if(car.price/10 > this.state.score){
+                            this.props.toast.show("Sorry, you don't have enough money.", 3000)
+                            return
+                        }
+                        this.props.payForCar(car.price/10) //paying for car
+                        car.speed = car.speed*1.1 // +10%
+                        car.score = car.score*1.1 // +10%
+                        car.upgradeAvailable = false
+                        car.vhr.serviceHistory.push({
+                                                        date: moment().format('MM/DD/YYYY'), 
+                                                        repair: "speed upgrade",
+                                                        cost: (car.price/10).toFixed(0),
+                                                        odometer: car.mileage,
+                                                    })
+                    }},
+                    {text: 'No', onPress: () => {
+                        car.upgradeAvailable = false
+                    }},
                 ],
                 { cancelable: false }
             )

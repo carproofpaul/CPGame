@@ -90,8 +90,8 @@ export default class Car  {
   }
 
   isInvolvedInAccident(){
-    //1 out of 645 chance
-    return Math.floor((Math.random() * 645) + 1) == Math.floor((Math.random() * 645) + 1)    
+    //1 out of 300 chance
+    return Math.floor((Math.random() * 300) + 1) == Math.floor((Math.random() * 300) + 1)    
   }
 
   delete(){
@@ -133,9 +133,9 @@ export default class Car  {
       this.info.upgradeAvailable = true;
     }
 
-    this.laps++ //adding a lap
-    this.callbackLap(1)
-    this.info.mileage++
+    this.laps = this.laps + 2 //adding a lap
+    this.callbackLap(2)
+    this.info.mileage = this.info.mileage + 2
     this.info.price = this.info.price - 0.20 //20 cents per km
   }
 

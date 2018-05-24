@@ -15,7 +15,8 @@ export default class Game extends PureComponent {
     super(props);
     this.saveCounter = 0 //no need to save this
 
-    //AsyncStorage.clear()
+    this.clock = 1527180255
+    this.timer = 0
 
     //load previous game
     this.loadGame()
@@ -294,7 +295,7 @@ export default class Game extends PureComponent {
   displayRepair(car, repair){
     cost = Math.floor((Math.random() * 1000) + 100);
     car.vhr.serviceHistory.push({
-                                  date: moment().format('MM/DD/YYYY'), 
+                                  date: moment(moment.unix(this.clock)).format('MM/DD/YYYY'), 
                                   repair: repair[1],
                                   cost: cost,
                                   odometer: car.mileage
@@ -305,12 +306,14 @@ export default class Game extends PureComponent {
 
   displayAccident(car, accident, isWriteOff){
     cost = Math.floor((Math.random() * 5000) + 1000)
-    car.vhr.accidents.push({
-                            date: moment().format('MM/DD/YYYY'), 
-                            accident: accident,
-                            cost: cost,
-                            odometer: car.mileage
-                          })
+    car.vhr.accidents.push(
+                            {
+                              date: moment(moment.unix(this.clock)).format('MM/DD/YYYY'), 
+                              accident: accident,
+                              cost: cost,
+                              odometer: car.mileage
+                            }
+                          )
     car.price = car.price - cost/2
     message = ""
     if(isWriteOff){
@@ -345,6 +348,8 @@ export default class Game extends PureComponent {
   }
 
   render() {
+    this.clock = this.clock + 100 //update unix time    
+    
     if(this.state.ready == false){
       return(
         <View>

@@ -4,6 +4,7 @@ import { GameLoop } from "react-native-game-engine";
 import IconButton from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ListItem, Divider} from 'react-native-elements';
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
+import moment from 'moment';
 
 const list = [
     {
@@ -20,10 +21,11 @@ export default class AccidentsDamage extends PureComponent {
     this.police = {
         tableHead: ['Incident Date', 'Estimate Location', 'Type of Record', 'Detail'],
         tableData: [
-            ['02/28/2007', 'Caledon, Ontario', 'Police Report', 'Right front corner'],
-            ['04/25/2010', 'Guelph, Ontario', 'Police Report', 'Left rear corner'],
+           // ['02/28/2007', 'Caledon, Ontario', 'Police Report', 'Right front corner'],
         ]
     }
+
+    this.loadPoliceReportData()
 
     this.accidents = {
         tableHead: ['Incident Date', 'Estimate Location', 'Estimate Date', 'Type of Record', 'Detail', 'Amount', 'Odometer'],
@@ -35,18 +37,20 @@ export default class AccidentsDamage extends PureComponent {
     this.insurance = {
         tableHead: ['Incident Date', 'Incident Location', 'Type of Record', 'Detail', 'Amount', 'Odometer'],
         tableData: [
-            ['02/28/2007', 'Caledon, Ontario', 'Estimate', 'Right front corner', '$2,305', '12,223 km'],
-            ['04/25/2010', 'Guelph, Ontario', 'Estimate', 'Left rear corner', '$3,345', '15,623 km'],
+            //['02/28/2007', 'Caledon, Ontario', 'Estimate', 'Right front corner', '$2,305', '12,223 km'],
         ]
     }
+
+    this.loadInsuranceClaims()
 
     this.other = {
         tableHead: ['Incident Date', 'Incident Location', 'Type of Record', 'Detail', 'Odometer'],
         tableData: [
-            ['02/28/2007', 'Caledon, Ontario', 'Estimate', 'Right front corner', '12,223 km'],
-            ['04/25/2010', 'Guelph, Ontario', 'Estimate', 'Left rear corner', '15,623 km'],
+            //['02/28/2007', 'Caledon, Ontario', 'Estimate', 'Right front corner', '12,223 km'],
         ]
     }
+
+    this.loadOtherReports()
 
 
 
@@ -54,6 +58,31 @@ export default class AccidentsDamage extends PureComponent {
         imgWidth: 0,
         imgHeight: 0,
     };
+  }
+
+  loadPoliceReportData(){
+    if(this.props.data.accidents.length == 0){
+        this.police.tableData.push(
+            [
+                'No police reported accidents found', 
+                '', 
+                '', 
+                ''
+            ]       
+        )
+    } else {
+        for(i = 0; i < this.props.data.accidents.length; i++){
+            this.police.tableData.push(
+                [
+                    this.props.data.accidents[i].date, 
+                    'Caledon, Ontario', 
+                    'Police Record',
+                    this.props.data.accidents[i].accident, 
+                ]
+                // ['02/28/2007', 'Caledon, Ontario', 'Police Report', 'Right front corner'],
+            )
+        }
+    }
   }
 
   loadAccidentData(){
@@ -76,6 +105,63 @@ export default class AccidentsDamage extends PureComponent {
                     this.props.data.accidents[i].date, 
                     'Caledon, Ontario', 
                     this.props.data.accidents[i].date,
+                    'Estimate', 
+                    this.props.data.accidents[i].accident, 
+                    '$'+this.props.data.accidents[i].cost, 
+                    this.props.data.accidents[i].odometer+' km'
+                ]
+            )
+        }
+    }
+  }
+
+  loadInsuranceClaims(){
+    if(this.props.data.accidents.length == 0){
+        this.insurance.tableData.push(
+            [
+                'No reported claims found', 
+                '', 
+                '',
+                '', 
+                '', 
+                ''
+            ]       
+        )
+    } else {
+        //['02/28/2007', 'Caledon, Ontario', 'Estimate', 'Right front corner', '$2,305', '12,223 km'],
+        for(i = 0; i < this.props.data.accidents.length; i++){
+            this.insurance.tableData.push(
+                [
+                    this.props.data.accidents[i].date, 
+                    'Caledon, Ontario', 
+                    'Estimate', 
+                    this.props.data.accidents[i].accident, 
+                    '$'+this.props.data.accidents[i].cost, 
+                    this.props.data.accidents[i].odometer+' km'
+                ]
+            )
+        }
+    }
+  }
+
+  loadOtherReports(){
+    if(this.props.data.accidents.length == 0){
+        this.other.tableData.push(
+            [
+                'No reported claims found', 
+                '', 
+                '', 
+                '', 
+                ''
+            ]       
+        )
+    } else {
+        //['02/28/2007', 'Caledon, Ontario', 'Estimate', 'Right front corner', '12,223 km'],
+        for(i = 0; i < this.props.data.accidents.length; i++){
+            this.other.tableData.push(
+                [
+                    this.props.data.accidents[i].date, 
+                    'Caledon, Ontario', 
                     'Estimate', 
                     this.props.data.accidents[i].accident, 
                     '$'+this.props.data.accidents[i].cost, 
@@ -185,9 +271,9 @@ export default class AccidentsDamage extends PureComponent {
                         </Text>
                         <ScrollView horizontal={true}>
                             <Table borderStyle={{borderWidth: 0}}>
-                                <Row data={this.insurance.tableHead}  style={styles.head} textStyle={styles.text} widthArr={this.getRowWidths(6)}/>
+                                <Row data={this.other.tableHead}  style={styles.head} textStyle={styles.text} widthArr={this.getRowWidths(6)}/>
                                 <Divider style={{backgroundColor: '#000'}} />
-                                <Rows data={this.insurance.tableData}  textStyle={styles.text} widthArr={this.getRowWidths(6)}/>
+                                <Rows data={this.other.tableData}  textStyle={styles.text} widthArr={this.getRowWidths(6)}/>
                                 <Divider style={{backgroundColor: '#000'}} />
                             </Table>
                         </ScrollView>
