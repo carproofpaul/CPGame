@@ -91,7 +91,7 @@ export default class Car  {
 
   isInvolvedInAccident(){
     //1 out of 300 chance
-    return Math.floor((Math.random() * 300) + 1) == Math.floor((Math.random() * 300) + 1)    
+    return Math.floor((Math.random() * 20) + 1) == Math.floor((Math.random() * 20) + 1)    
   }
 
   delete(){

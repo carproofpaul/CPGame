@@ -74,7 +74,7 @@ export default class AccidentsDamage extends PureComponent {
         for(i = 0; i < this.props.data.accidents.length; i++){
             this.police.tableData.push(
                 [
-                    this.props.data.accidents[i].date, 
+                    moment(moment(this.props.data.accidents[i].date, 'MM/DD/YYYY').add(2, 'days')).format('MM/DD/YYYY'), 
                     'Caledon, Ontario', 
                     'Police Record',
                     this.props.data.accidents[i].accident, 
@@ -132,7 +132,7 @@ export default class AccidentsDamage extends PureComponent {
         for(i = 0; i < this.props.data.accidents.length; i++){
             this.insurance.tableData.push(
                 [
-                    this.props.data.accidents[i].date, 
+                    moment(moment(this.props.data.accidents[i].date, 'MM/DD/YYYY').add(1, 'days')).format('MM/DD/YYYY'), 
                     'Caledon, Ontario', 
                     'Estimate', 
                     this.props.data.accidents[i].accident, 
