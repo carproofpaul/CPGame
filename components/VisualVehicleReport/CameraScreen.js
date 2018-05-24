@@ -2,6 +2,7 @@ import { Constants, Camera, FileSystem, Permissions } from 'expo';
 import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { StyleSheet, Text, View, TouchableOpacity, Slider, Vibration, Dimensions, Image, Modal, Alert, ActivityIndicator} from 'react-native';
+import ImageTools from 'react-native-image-tool';
 
 const flashModeOrder = {
   off: 'on',
@@ -38,8 +39,10 @@ export default class CameraScreen extends React.Component {
 
   takePicture = async function() {
     if (this.camera) {
-      this.camera.takePictureAsync().then(data => {
-        this.setState({image: data.uri})
+      this.camera.takePictureAsync({base64: true}).then(data => {
+        console.log("takePictureAsync")
+        this.setState({image: data})
+        this.makeCall(data)
         Vibration.vibrate();
       });
     }
@@ -109,55 +112,50 @@ export default class CameraScreen extends React.Component {
     );
   }
 
-  makeCall(data){
-    /*** TODO: Add binary stream for uploading images
-    
-    //var image = {image: "https://i1.wp.com/wildsau.ca/wp-content/uploads/2013/06/front-quarter_.jpg?fit=1280%2C853"};
 
+  makeCall(file){
+
+    /*
+    fetch('https://api.cloudinary.com/v1_1/dlic95ed5/image/upload', {
+      method: 'POST',
+      body: {
+        file: file.base64,
+        upload_preset: 'tqcsiwue'
+      }
+    }).then(res => {
+      console.log(res)
+    });
+
+
+    var image = {image: file.base64};
     var xmlhttp = new XMLHttpRequest();
     var result;
-
-    console.log(data)
-
-    xmlhttp.onreadystatechange = (function () {
-        if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-            result = xmlhttp.responseText;
-            json = JSON.parse(result)
-
-            console.log(json);
-            
-            Alert.alert(
-                'Car Detected',
-                'License Plate: ' + json.objects[0].vehicleAnnotation.licenseplate.attributes.system.string.name + "\n" +
-                'Make: '+ json.objects[0].vehicleAnnotation.attributes.system.make.name + "\n" +
-                'Model: '+ json.objects[0].vehicleAnnotation.attributes.system.model.name + "\n" +
-                'Colour: '+ json.objects[0].vehicleAnnotation.attributes.system.color.name + "\n",
-                [
-                  {text: 'OK', onPress: () => this.setState({image: null})},
-                ],
-                { cancelable: true }
-            )
-
-        } else {
+    
+    xmlhttp.onreadystatechange = function () {
+      if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+        result = xmlhttp.responseText;
+        console.log(result)
+      } else {
+        console.log("ERROR")
         console.log(xmlhttp)
-        }
-    }).bind(this)
-
+      }
+    }
+    
     xmlhttp.open("POST", "https://dev.sighthoundapi.com/v1/recognition?objectType=vehicle,licenseplate");
     xmlhttp.setRequestHeader("Content-type", "application/octet-stream");
     xmlhttp.setRequestHeader("X-Access-Token", "zGYv5QFWLWQuGuXW54FsP6pzIyq9oCtQyqpa");
-    xmlhttp.send(data);
+    xmlhttp.send(file.base64);
 
-    ***/
+    */
+
   }
 
   render() {
     if(this.state.image != null) {
-      this.makeCall(this.state.image)
       return(
         <Image 
           style={{flex: 1, height: Dimensions.get('window').height, width: Dimensions.get('window').width}} 
-          source={{uri: this.state.image}}
+          source={{uri: this.state.image.uri}}
         />
       );
     }
