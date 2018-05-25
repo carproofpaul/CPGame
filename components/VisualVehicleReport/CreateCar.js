@@ -33,7 +33,7 @@ export default class CreateCar extends PureComponent {
                 year: this.props.car.VehicleYear.toString(),
                 make: this.props.car.VehicleMake,
                 model: this.props.car.VehicleModel,
-                value: valuation.toFixed(2)
+                value: valuation.toFixed(0)
             })
         }
     }
@@ -53,33 +53,12 @@ export default class CreateCar extends PureComponent {
             this.setState({error: ""})
         }
 
-        /**
-        {
-            title: '2010 Toyota Yaris',
-            speed : 15,
-            score : 100,
-            mileage : 150000,
-            price : 9459,
-            isOnTrack : false,
-            upgradeAvailable : false, 
-            id: this.id++,
-            vhr: new VechicleHistoryReport({
-              vin: '2T1KU40E19C034127',
-              bodyStyle: 'Touring',
-              countryOfAssembly: 'Japan',
-              cylinders: 4,
-              fuelType: 'gas',
-              yearMakeModel: '2010 Toyota Yaris'
-            }),
-          },
-         */
-
         car = {
             title: this.state.year + " " + this.state.make + " " + this.state.model,
             speed : 15,
             score : 250,
             mileage : parseInt(this.state.odometer),
-            price : parseInt(this.state.value),
+            price : Math.ceil(parseInt(this.state.value)),
             isOnTrack : false,
             upgradeAvailable : false, 
             id: null,

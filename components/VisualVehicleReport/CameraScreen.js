@@ -43,8 +43,9 @@ export default class CameraScreen extends React.Component {
   }
 
   takePicture = async function() {
+    this.setState({loading: true})
     if (this.camera) {
-      this.camera.takePictureAsync({base64: true}).then(data => {
+      this.camera.takePictureAsync({quality: 0.5}).then(data => {
         console.log("takePictureAsync")
         this.setState({image: data})
         this.makeCall(data)
@@ -280,8 +281,6 @@ export default class CameraScreen extends React.Component {
   }
 
   makeCall(file){
-
-    this.setState({loading: true})
 
     var fd = new FormData();
     var xmlhttp = new XMLHttpRequest();

@@ -358,7 +358,9 @@ export default class Game extends PureComponent {
       )
     } else if(this.state.camera == true){
       return(
-        <CameraScreen  onBack={() => this.setState({camera: false})} insertNewCar={(car) => { this.carInformation.push(car) }}/>
+        <CameraScreen  onBack={() => this.setState({camera: false})} insertNewCar={(car) => { 
+          this.carInformation.push(car) 
+        }}/>
       );
     }
     return (
