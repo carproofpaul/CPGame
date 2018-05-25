@@ -145,7 +145,7 @@ export default class CameraScreen extends React.Component {
         if(car.ResultCode === 1){
           this.displayResults(car)
         } else {
-          this.displayError(car.Message)
+          this.displayError(car.ResultMessage)
         }
 
         //Stop Loader
@@ -173,6 +173,7 @@ export default class CameraScreen extends React.Component {
       if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
         //DATA
         json = JSON.parse(xmlhttp.responseText)
+        console.log("VIN: " + json.QuickVINPlus.VINInfo.VIN)
         this.getValueRange(json.QuickVINPlus.VINInfo.VIN) //VIN
       } else if(xmlhttp.readyState === 4 && xmlhttp.status !== 200){
         //ERROR
@@ -219,7 +220,7 @@ export default class CameraScreen extends React.Component {
 
         
 
-        licenseplate = ''
+        licensePlate = ''
         make = ''
         color = ''
         confidence = ''
@@ -237,6 +238,8 @@ export default class CameraScreen extends React.Component {
 
         try{ confidence = result.objects[0].vehicleAnnotation.recognitionConfidence}
         catch(error){ confidence = 'Not Found'  }
+
+        console.log("License plate: " + licensePlate)
 
         this.getVIN(licensePlate)
 /*
