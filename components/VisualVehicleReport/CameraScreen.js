@@ -3,6 +3,8 @@ import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { StyleSheet, Text, View, TouchableOpacity, Slider, Vibration, Dimensions, Image, Modal, Alert, ActivityIndicator} from 'react-native';
 import ImageTools from 'react-native-image-tool';
+import Loader from '../Loader';
+import { Token } from '../../resources/Token';
 
 const flashModeOrder = {
   off: 'on',
@@ -115,16 +117,76 @@ export default class CameraScreen extends React.Component {
   displayResults(car){
     Alert.alert(
       'Car Detected',
-      'License plate: ' + car.licensePlate + "\n" +
-      'Make: ' + car.make + "\n" +
-      'Model: ' + car.model + "\n" +
-      'Colour: ' + car.color + "\n" +
-      'Recognition Confidence: ' + car.confidence.toFixed(2)*100,
+      'Average Value: $' + ((car.MinValuation+car.MaxValuation)/2).toFixed(2) + "\n" +
+      'VIN: ' + car.Vin + "\n" +
+      'Year: ' + car.VehicleYear + "\n" +
+      'Make: ' + car.VehicleMake + "\n" +
+      'Model: ' + car.VehicleModel + "\n" +
+      'Trim: ' + car.VehicleTrim + "\n" +
+      'Drive Train: ' + car.VehicleDrivetrainEnglishText + "\n" +
+      'Body Style: ' + car.VehicleBodyStyleEnglishText,
       [
         {text: 'OK', onPress: () => this.setState({image: null})},
       ],
       { cancelable: false }
     )
+  }
+
+  getValueRange(vin){
+    var xmlhttp = new XMLHttpRequest();
+    var result;
+    
+    xmlhttp.onreadystatechange = (function () {
+      if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+        //DATA
+        console.log(xmlhttp.responseText)
+        car = JSON.parse(xmlhttp.responseText)
+        
+        if(car.ResultCode === 1){
+          this.displayResults(car)
+        } else {
+          this.displayError(car.Message)
+        }
+
+        //Stop Loader
+        this.setState({loading: false})
+      } else if(xmlhttp.readyState === 4 && xmlhttp.status !== 200){
+        //ERROR
+        console.log(xmlhttp)
+        this.setState({loading: false})
+      }
+    }).bind(this)
+    
+    xmlhttp.open("GET", "http://apivaluationwebservice.carproof.com/ValuationRange/GetRetailValuationRange?vin="+vin, true);
+    xmlhttp.setRequestHeader("webServiceToken", Token._webServiceToken);
+
+    xmlhttp.send();
+
+  }
+
+  getVIN(licensePlate){
+
+    var xmlhttp = new XMLHttpRequest();
+    var result;
+    
+    xmlhttp.onreadystatechange = (function () {
+      if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+        //DATA
+        json = JSON.parse(xmlhttp.responseText)
+        this.getValueRange(json.QuickVINPlus.VINInfo.VIN) //VIN
+      } else if(xmlhttp.readyState === 4 && xmlhttp.status !== 200){
+        //ERROR
+        console.log(xmlhttp)
+        this.setState({loading: false})
+      }
+    }).bind(this)
+    
+    xmlhttp.open("GET", "http://carfaxapi.carproof.com/api/QuickVIN?licensePlate="+licensePlate+"&province=on", true);
+    xmlhttp.setRequestHeader("User-Agent", "request");
+    xmlhttp.setRequestHeader("webServiceToken", Token._webServiceToken);
+
+    xmlhttp.send();
+
   }
 
   displayError(error){
@@ -155,18 +217,42 @@ export default class CameraScreen extends React.Component {
           return
         }
 
-        console.log(result.objects[0].vehicleAnnotation.recognitionConfidence)
+        
+
+        licenseplate = ''
+        make = ''
+        color = ''
+        confidence = ''
+        try{ licensePlate = result.objects[0].vehicleAnnotation.licenseplate.attributes.system.string.name } 
+        catch(error) { licensePlate = 'Not Found' }
+
+        try{ make = result.objects[0].vehicleAnnotation.attributes.system.make.name }
+        catch(error){ make = 'Not Found' }
+
+        try{ model = result.objects[0].vehicleAnnotation.attributes.system.model.name }
+        catch(error){ model = 'Not Found' }
+        
+        try{ color = result.objects[0].vehicleAnnotation.attributes.system.color.name }
+        catch(error){ color = 'Not Found'  }
+
+        try{ confidence = result.objects[0].vehicleAnnotation.recognitionConfidence}
+        catch(error){ confidence = 'Not Found'  }
+
+        this.getVIN(licensePlate)
+/*
 
         car = {
-          licensePlate: result.objects[0].vehicleAnnotation.licenseplate.attributes.system.string.name,
-          make: result.objects[0].vehicleAnnotation.attributes.system.make.name,
-          model: result.objects[0].vehicleAnnotation.attributes.system.model.name,
-          color: result.objects[0].vehicleAnnotation.attributes.system.color.name,
-          confidence: result.objects[0].vehicleAnnotation.recognitionConfidence
+          licensePlate: licensePlate,
+          make: make,
+          model: model,
+          color: color,
+          confidence: confidence
         }
 
-        console.log(car)
-        this.displayResults(car)
+
+        //console.log(car)
+        //this.displayResults(car)
+*/
       }
     }).bind(this)
     
@@ -178,6 +264,8 @@ export default class CameraScreen extends React.Component {
 
 
   makeCall(file){
+
+    this.setState({loading: true})
 
     var fd = new FormData();
     var xmlhttp = new XMLHttpRequest();
@@ -211,10 +299,13 @@ export default class CameraScreen extends React.Component {
   render() {
     if(this.state.image != null) {
       return(
-        <Image 
-          style={{flex: 1, height: Dimensions.get('window').height, width: Dimensions.get('window').width}} 
-          source={{uri: this.state.image.uri}}
-        />
+        <View style={{flex: 1}}>
+          <Loader loading={this.state.loading}/>
+          <Image 
+            style={{flex: 1, height: Dimensions.get('window').height, width: Dimensions.get('window').width}} 
+            source={{uri: this.state.image.uri}}
+          />
+        </View>
       );
     }
 
