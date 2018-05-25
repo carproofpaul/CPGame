@@ -5,6 +5,8 @@ import { StyleSheet, Text, View, TouchableOpacity, Slider, Vibration, Dimensions
 import ImageTools from 'react-native-image-tool';
 import Loader from '../Loader';
 import { Token } from '../../resources/Token';
+import CreateCar from './CreateCar';
+
 
 const flashModeOrder = {
   off: 'on',
@@ -20,6 +22,7 @@ export default class CameraScreen extends React.Component {
     ratio: '16:9',
     image: null,
     loading: false,
+    createCarModal: false,
   };
 
   async componentWillMount() {
@@ -132,6 +135,17 @@ export default class CameraScreen extends React.Component {
     )
   }
 
+  displayError(error){
+    Alert.alert(
+      'Error',
+      error,
+      [
+        {text: 'OK', onPress: () => this.setState({image: null})},
+      ],
+      { cancelable: false }
+    )
+  }
+
   getValueRange(vin){
     var xmlhttp = new XMLHttpRequest();
     var result;
@@ -140,12 +154,13 @@ export default class CameraScreen extends React.Component {
       if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
         //DATA
         console.log(xmlhttp.responseText)
-        car = JSON.parse(xmlhttp.responseText)
+        this.car = JSON.parse(xmlhttp.responseText)
         
-        if(car.ResultCode === 1){
-          this.displayResults(car)
+        if(this.car.ResultCode === 1){
+          //this.displayResults(this.car)
+          this.setState({createCarModal: true})
         } else {
-          this.displayError(car.ResultMessage)
+          this.displayError(this.car.ResultMessage)
         }
 
         //Stop Loader
@@ -168,13 +183,22 @@ export default class CameraScreen extends React.Component {
 
     var xmlhttp = new XMLHttpRequest();
     var result;
+
+    console.log("GETTING VIN FOR " + licensePlate)
     
     xmlhttp.onreadystatechange = (function () {
       if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
         //DATA
+        console.log(xmlhttp.responseText)
         json = JSON.parse(xmlhttp.responseText)
-        console.log("VIN: " + json.QuickVINPlus.VINInfo.VIN)
-        this.getValueRange(json.QuickVINPlus.VINInfo.VIN) //VIN
+
+        //if VIN array empty, display error and return
+        if(json.QuickVINPlus.VINInfo.VIN.length == 0){
+          this.displayError("No VIN found, please only use vehicles registered in Canada.")
+          return
+        } 
+        this.additionalInfomation = json.QuickVINPlus.VINInfo.CarFaxVINDecode.Trims[0]
+        this.getValueRange(json.QuickVINPlus.VINInfo.VIN[0]) //VIN
       } else if(xmlhttp.readyState === 4 && xmlhttp.status !== 200){
         //ERROR
         console.log(xmlhttp)
@@ -188,17 +212,6 @@ export default class CameraScreen extends React.Component {
 
     xmlhttp.send();
 
-  }
-
-  displayError(error){
-    Alert.alert(
-      'Error',
-      error,
-      [
-        {text: 'OK', onPress: () => this.setState({image: null})},
-      ],
-      { cancelable: false }
-    )
   }
 
   getCarData(url){
@@ -240,11 +253,15 @@ export default class CameraScreen extends React.Component {
         catch(error){ confidence = 'Not Found'  }
 
         console.log("License plate: " + licensePlate)
+        
+        if(licensePlate !== 'Not Found'){
+          this.getVIN(licensePlate)
+        } else {
+          this.displayError("License plate cannot be read.")
+        }
 
-        this.getVIN(licensePlate)
-/*
 
-        car = {
+        this.backupCar = {
           licensePlate: licensePlate,
           make: make,
           model: model,
@@ -253,9 +270,6 @@ export default class CameraScreen extends React.Component {
         }
 
 
-        //console.log(car)
-        //this.displayResults(car)
-*/
       }
     }).bind(this)
     
@@ -264,7 +278,6 @@ export default class CameraScreen extends React.Component {
     xmlhttp.setRequestHeader("X-Access-Token", "zGYv5QFWLWQuGuXW54FsP6pzIyq9oCtQyqpa");
     xmlhttp.send(JSON.stringify(image));
   }
-
 
   makeCall(file){
 
@@ -303,6 +316,15 @@ export default class CameraScreen extends React.Component {
     if(this.state.image != null) {
       return(
         <View style={{flex: 1}}>
+          <CreateCar 
+            insertNewCar={(car) => this.props.insertNewCar(car)} 
+            visible={this.state.createCarModal} 
+            additionalInformation={this.additionalInfomation} 
+            car={this.car} 
+            onClose={() => {
+              this.setState({createCarModal: false})
+              this.props.onBack()
+            }}/>
           <Loader loading={this.state.loading}/>
           <Image 
             style={{flex: 1, height: Dimensions.get('window').height, width: Dimensions.get('window').width}} 
