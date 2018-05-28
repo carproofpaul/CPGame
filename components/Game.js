@@ -398,17 +398,17 @@ export default class Game extends PureComponent {
         onUpdate={() => this.setState({components : this.updateCars()})}>
           <View style={styles.iconContainer}>
             <IconButton
-                size={20}
-                onPress={() => this.props.onBack()}
-                name='arrow-left' 
+              size={20}
+              onPress={() => this.props.onBack()}
+              name='arrow-left' 
             />
             <IconButton
-                size={20}
-                onPress={ () => this.first ? 
-                                this.firstOpenCamera() : 
-                                this.setState({camera: true})
-                        }
-                name='camera' 
+              size={20}
+              onPress={ () => this.first ? 
+                              this.firstOpenCamera() : 
+                              this.setState({camera: true})
+                      }
+              name='camera' 
             />
           </View>
           <Toast 

@@ -66,10 +66,9 @@ export default class CameraScreen extends React.Component {
   }
 
   _pickImage = async () => {
-
+    this.setState({loading: true})
     let result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      aspect: [1, 1],
+      allowsEditing: false,
     });
 
     if (!result.cancelled) {

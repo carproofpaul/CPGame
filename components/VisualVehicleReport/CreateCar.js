@@ -99,53 +99,59 @@ export default class CreateCar extends PureComponent {
                 animationType="slide"
                 visible={this.props.visible}
                 onRequestClose={() => this.props.onClose()}>
-                <View style={styles.container}>
-                    <Text style={styles.title}>Please Add or Correct Any Information</Text>
-                    <Text style={styles.error}>{this.state.error}</Text>
-                    <Input
-                        onChangeText={(text) => this.setState({year: text})}
-                        label='Year'
-                        placeholder='year'
-                        value={this.state.year}
-                        keyboardType='numeric'
-                        containerStyle={{margin: 5}}
+                    <IconButton
+                        size={20}
+                        style={{margin: 15}}
+                        onPress={() => this.props.onClose()}
+                        name='arrow-left' 
                     />
-                    <Input
-                        onChangeText={(text) => this.setState({make: text})}
-                        label='Make'
-                        placeholder='Make'
-                        value={this.state.make}
-                        containerStyle={{margin: 5}}
-                    />
-                    <Input
-                        onChangeText={(text) => this.setState({model: text})}
-                        label='Model'
-                        placeholder='Model'
-                        value={this.state.model}
-                        containerStyle={{margin: 5}}
-                    />
-                    <Input
-                        onChangeText={(text) => this.setState({value: text})}
-                        label='$ Value'
-                        placeholder='$ Value'
-                        value={this.state.value}
-                        containerStyle={{margin: 5}}
-                    />
-                    <Input
-                        onChangeText={(text) => this.setState({odometer: text})}
-                        label='Odometer (km)'
-                        placeholder='Odometer (km)'
-                        value={this.state.odometer}
-                        keyboardType='numeric'
-                        containerStyle={{margin: 5}}
-                    />
-                    <Button
-                        containerStyle={{margin: 10}}
-                        title='CREATE CAR'
-                        raised={false}
-                        onPress={() => this.createCar()}
-                    />
-                </View>
+                    <View style={styles.container}>
+                        <Text style={styles.title}>Please Add or Correct Any Information</Text>
+                        <Text style={styles.error}>{this.state.error}</Text>
+                        <Input
+                            onChangeText={(text) => this.setState({year: text})}
+                            label='Year'
+                            placeholder='year'
+                            value={this.state.year}
+                            keyboardType='numeric'
+                            containerStyle={{margin: 5}}
+                        />
+                        <Input
+                            onChangeText={(text) => this.setState({make: text})}
+                            label='Make'
+                            placeholder='Make'
+                            value={this.state.make}
+                            containerStyle={{margin: 5}}
+                        />
+                        <Input
+                            onChangeText={(text) => this.setState({model: text})}
+                            label='Model'
+                            placeholder='Model'
+                            value={this.state.model}
+                            containerStyle={{margin: 5}}
+                        />
+                        <Input
+                            onChangeText={(text) => this.setState({value: text})}
+                            label='$ Value'
+                            placeholder='$ Value'
+                            value={this.state.value}
+                            containerStyle={{margin: 5}}
+                        />
+                        <Input
+                            onChangeText={(text) => this.setState({odometer: text})}
+                            label='Odometer (km)'
+                            placeholder='Odometer (km)'
+                            value={this.state.odometer}
+                            keyboardType='numeric'
+                            containerStyle={{margin: 5}}
+                        />
+                        <Button
+                            containerStyle={{margin: 10}}
+                            title='CREATE CAR'
+                            raised={false}
+                            onPress={() => this.createCar()}
+                        />
+                    </View>
             </Modal>
         )
     }
