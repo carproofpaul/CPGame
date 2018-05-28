@@ -10,10 +10,12 @@ import Toast, {DURATION} from 'react-native-easy-toast';
 import moment from 'moment';
 import CameraScreen from './VisualVehicleReport/CameraScreen';
 
+
 export default class Game extends PureComponent {
   constructor(props) {
     super(props);
     this.saveCounter = 0 //no need to save this
+    this.first = true
 
     this.clock = 1527180255
     this.timer = 0
@@ -347,6 +349,33 @@ export default class Game extends PureComponent {
                   )
   }
 
+  firstOpenCamera(){
+    Alert.alert(
+      'Import a Real Car',
+      'You can import a real car into this game by taking a picture of one with the license plate visible.',
+      [
+        {text: 'OK', onPress: () => {
+          this.first = false
+          this.setState({camera: true})
+        }},
+        {text: 'Cancel', onPress: null, style: 'cancel'},
+      ],
+      { cancelable: true }
+    )
+  }
+
+  getImage(){
+    Alert.alert(
+      '',
+      'Do you want to use your camera or gallery?',
+      [
+        {text: 'Use Camera', onPress: () => this.setState({camera: true}) },
+        {text: 'Use Gallery', onPress: () => this._pickImage() },
+      ],
+      { cancelable: true }
+    )
+  }
+
   render() {
     this.clock = this.clock + 100 //update unix time    
     
@@ -375,7 +404,10 @@ export default class Game extends PureComponent {
             />
             <IconButton
                 size={20}
-                onPress={() => this.setState({camera: true})}
+                onPress={ () => this.first ? 
+                                this.firstOpenCamera() : 
+                                this.setState({camera: true})
+                        }
                 name='camera' 
             />
           </View>

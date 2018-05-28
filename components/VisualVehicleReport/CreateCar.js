@@ -28,12 +28,13 @@ export default class CreateCar extends PureComponent {
 
     componentWillReceiveProps(){
         if(this.props.car !== undefined){
+            console.log("componentWillReceiveProps")
             valuation = ((this.props.car.MinValuation + this.props.car.MaxValuation)/2)
             this.setState({
-                year: this.props.car.VehicleYear.toString(),
+                year: this.props.car.VehicleYear !== 0 ? this.props.car.VehicleYear.toString() : "",
                 make: this.props.car.VehicleMake,
                 model: this.props.car.VehicleModel,
-                value: valuation.toFixed(0)
+                value: valuation !== 0 ? valuation.toFixed(0) : ""
             })
         }
     }
@@ -65,8 +66,8 @@ export default class CreateCar extends PureComponent {
             vhr: new VechicleHistoryReport({
                 vin: this.props.car.Vin,
                 bodyStyle: this.props.car.VehicleTrim,
-                countryOfAssembly: this.props.additionalInformation.OEMCountryOfOrigin,
-                cylinders: this.props.additionalInformation.OEMCylinders,
+                countryOfAssembly: this.props.additionalInformation.OEMCountryOfOrigin || "",
+                cylinders: this.props.additionalInformation.OEMCylinders || "",
                 fuelType: this.props.car.VehicleEngineEnglishText,
                 yearMakeModel: this.state.year + " " + this.state.make + " " + this.state.model
             }),
@@ -124,7 +125,7 @@ export default class CreateCar extends PureComponent {
                         containerStyle={{margin: 5}}
                     />
                     <Input
-                        onChangeText={(text) => this.setState({model: value})}
+                        onChangeText={(text) => this.setState({value: text})}
                         label='$ Value'
                         placeholder='$ Value'
                         value={this.state.value}

@@ -6,6 +6,7 @@ import ImageTools from 'react-native-image-tool';
 import Loader from '../Loader';
 import { Token } from '../../resources/Token';
 import CreateCar from './CreateCar';
+import { ImagePicker } from 'expo';
 
 
 const flashModeOrder = {
@@ -48,7 +49,7 @@ export default class CameraScreen extends React.Component {
       this.camera.takePictureAsync({quality: 0.5}).then(data => {
         console.log("takePictureAsync")
         this.setState({image: data})
-        this.makeCall(data)
+        this.uploadImage(data)
         Vibration.vibrate();
       });
     }
@@ -63,6 +64,21 @@ export default class CameraScreen extends React.Component {
       </View>
     );
   }
+
+  _pickImage = async () => {
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [1, 1],
+    });
+
+    if (!result.cancelled) {
+      console.log("_pickImage")
+      this.setState({image: result})
+      this.uploadImage(result)
+      Vibration.vibrate();
+    }
+  };
 
   renderCamera() {
     return (
@@ -98,8 +114,8 @@ export default class CameraScreen extends React.Component {
               <TouchableOpacity style={styles.flipButton} onPress={this.toggleFacing.bind(this)}>
                 <Text style={styles.flipText}> FLIP </Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.flipButton} onPress={this.toggleFlash.bind(this)}>
-                <Text style={styles.flipText}> FLASH: {this.state.flash} </Text>
+              <TouchableOpacity style={styles.flipButton} onPress={() => this._pickImage()}>
+                <Text style={styles.flipText}> GALLERY </Text>
               </TouchableOpacity>
             </View>
             <View
@@ -155,13 +171,15 @@ export default class CameraScreen extends React.Component {
       if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
         //DATA
         console.log(xmlhttp.responseText)
-        this.car = JSON.parse(xmlhttp.responseText)
         
-        if(this.car.ResultCode === 1){
-          //this.displayResults(this.car)
+        json = JSON.parse(xmlhttp.responseText)
+        
+        if(json.ResultCode === 1){
+          this.car = json
           this.setState({createCarModal: true})
         } else {
-          this.displayError(this.car.ResultMessage)
+          //this.displayError(this.car.ResultMessage)
+          this.setState({createCarModal: true})
         }
 
         //Stop Loader
@@ -195,9 +213,28 @@ export default class CameraScreen extends React.Component {
 
         //if VIN array empty, display error and return
         if(json.QuickVINPlus.VINInfo.VIN.length == 0){
-          this.displayError("No VIN found, please only use vehicles registered in Canada.")
+          Alert.alert(
+            'No VIN Found',
+            'Unfortunately, we were not able to pull up detailed information about this vehicle. However, you can still import this vehicle into the game by inputting additional information manually.',
+            [
+              {text: 'OK', onPress: () => this.setState({createCarModal: true})},
+              {text: 'No Thanks', onPress: () => this.setState({image: null})}, 
+            ],
+            { cancelable: false }
+          )
           return
         } 
+
+        this.car = {
+          VehicleYear: parseInt(json.QuickVINPlus.VINInfo.CarFaxVINDecode.Trims[0].BaseYearModel),
+          VehicleMake: json.QuickVINPlus.VINInfo.CarFaxVINDecode.Trims[0].OEMMakeAbbreviation,
+          VehicleModel: json.QuickVINPlus.VINInfo.CarFaxVINDecode.Trims[0].BaseSeriesName,
+          MinValuation: 0,
+          MaxValuation: 0,
+        }
+
+        console.log(this.car)
+
         this.additionalInfomation = json.QuickVINPlus.VINInfo.CarFaxVINDecode.Trims[0]
         this.getValueRange(json.QuickVINPlus.VINInfo.VIN[0]) //VIN
       } else if(xmlhttp.readyState === 4 && xmlhttp.status !== 200){
@@ -232,8 +269,6 @@ export default class CameraScreen extends React.Component {
           return
         }
 
-        
-
         licensePlate = ''
         make = ''
         color = ''
@@ -254,23 +289,32 @@ export default class CameraScreen extends React.Component {
         catch(error){ confidence = 'Not Found'  }
 
         console.log("License plate: " + licensePlate)
+
+        //backup if no vin
+        this.car = {
+          VehicleYear: 0,
+          VehicleMake: make,
+          VehicleModel: model,
+          MinValuation: 0,
+          MaxValuation: 0,
+        }
+
+        console.log(this.car)
         
         if(licensePlate !== 'Not Found'){
           this.getVIN(licensePlate)
         } else {
-          this.displayError("License plate cannot be read.")
+          Alert.alert(
+            'Error',
+            'License plate cannot be read. However, you can still add this vehicle to the game by filling out some information manually.',
+            [
+              {text: 'OK', onPress: () => this.setState({createCarModal: true})},
+              {text: 'No Thanks', onPress: () => this.setState({image: null})},
+            ],
+            { cancelable: false }
+          )
+          this.setState({loading: false})
         }
-
-
-        this.backupCar = {
-          licensePlate: licensePlate,
-          make: make,
-          model: model,
-          color: color,
-          confidence: confidence
-        }
-
-
       }
     }).bind(this)
     
@@ -280,7 +324,7 @@ export default class CameraScreen extends React.Component {
     xmlhttp.send(JSON.stringify(image));
   }
 
-  makeCall(file){
+  uploadImage(file){
 
     var fd = new FormData();
     var xmlhttp = new XMLHttpRequest();
