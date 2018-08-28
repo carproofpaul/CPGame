@@ -6,6 +6,11 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Game from './Game';
 import Tutorial from './Tutorial';
 
+/**
+ * Main menu for this game.
+ * if previous game was saved, there'll be an option to resume it. 
+ * User can also start a new game, or view a tutorial (text)
+ */
 
 export default class StartMenu extends PureComponent {
   constructor(props) {

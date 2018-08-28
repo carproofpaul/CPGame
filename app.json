@@ -2,7 +2,15 @@
   "expo": {
     "name": "CPGame",
     "description": "Game highlighting the benefits of CP products.",
+    "icon": "./assets/app_icon.png",
     "sdkVersion": "27.0.0",
-    "orientation": "portrait"
+    "orientation": "portrait",
+    "version": "1.0.0",
+    "splash": {
+      "image": "./assets/splash.png"
+    },
+    "ios": {
+      "bundleIdentifier": "com.carproof.CPGAME"
+    }
   }
 }

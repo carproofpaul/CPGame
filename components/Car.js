@@ -1,6 +1,10 @@
 //imports
 import { Dimensions } from "react-native";
 
+/**
+ * This class represents the Car
+ */
+
 //Screen dimensions
 const { width: WIDTH, height: HEIGHT } = Dimensions.get("window");
 const RADIUS = 25;
@@ -68,6 +72,7 @@ export default class Car  {
     //callback every second/10 (Keeping a reference to be deleted later)
     this.timer = setInterval(() => this.callbackScore(this.info.score/10 || .1), 100);
 
+    //maintenance timer, every second
     this.maintenance = setInterval(() => {
       if(this.isMaintenaceRequired()){
         index = Math.floor((Math.random() * (REPAIRS.length-1)))
@@ -75,6 +80,7 @@ export default class Car  {
       }
     }, 1000);
 
+    //Accident timer
     this.accident = setInterval(() => {
       if(this.isInvolvedInAccident()){
         //isWriteOff = ( 1 == Math.floor((Math.random() * 5)+1)  )  false for now
