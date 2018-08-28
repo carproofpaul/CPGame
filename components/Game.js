@@ -33,6 +33,7 @@ export default class Game extends PureComponent {
   }
 
   async loadGame() {
+    //checking if there's a saved game, if no, load default starter
     try {
       const gameData = await AsyncStorage.getItem('@CPGame:game');
       if(gameData != null){
@@ -56,6 +57,7 @@ export default class Game extends PureComponent {
         this.requiredPointForNewCar = gameData[7]
 
       } else {
+        //loading default beginning
         this.key = 0
         this.score = 0
         this.totalLaps = 0
@@ -221,6 +223,9 @@ export default class Game extends PureComponent {
   }
 
   async saveGame() {
+    /**
+     * Storing game data in async storage
+     */
     gameData = []
     gameData.push(this.key)
     gameData.push(this.score)
